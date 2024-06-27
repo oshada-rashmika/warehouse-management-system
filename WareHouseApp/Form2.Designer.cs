@@ -36,6 +36,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -45,32 +46,32 @@
             this.button7 = new System.Windows.Forms.Button();
             this.dropdownContainer = new System.Windows.Forms.FlowLayoutPanel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.button9 = new System.Windows.Forms.Button();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.button10 = new System.Windows.Forms.Button();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button8 = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
             this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.button10 = new System.Windows.Forms.Button();
+            this.panel9 = new System.Windows.Forms.Panel();
             this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.button9 = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.dropdownContainer.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel7.SuspendLayout();
-            this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
@@ -78,7 +79,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -141,6 +141,16 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Mahin";
             this.label1.Click += new System.EventHandler(this.label1_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::WareHouseApp.Properties.Resources.user;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 11);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(55, 52);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
             // 
             // panel4
             // 
@@ -256,6 +266,19 @@
             this.panel5.Size = new System.Drawing.Size(160, 45);
             this.panel5.TabIndex = 0;
             // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
+            this.button8.BackgroundImage = global::WareHouseApp.Properties.Resources.menu;
+            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button8.Location = new System.Drawing.Point(85, 0);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 45);
+            this.button8.TabIndex = 24;
+            this.button8.UseVisualStyleBackColor = false;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // panel6
             // 
             this.panel6.Location = new System.Drawing.Point(0, 45);
@@ -263,6 +286,82 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(160, 45);
             this.panel6.TabIndex = 25;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.panel8);
+            this.panel7.Controls.Add(this.pictureBox8);
+            this.panel7.Controls.Add(this.button10);
+            this.panel7.Location = new System.Drawing.Point(0, 45);
+            this.panel7.Margin = new System.Windows.Forms.Padding(0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(160, 45);
+            this.panel7.TabIndex = 26;
+            // 
+            // panel8
+            // 
+            this.panel8.Location = new System.Drawing.Point(0, 44);
+            this.panel8.Margin = new System.Windows.Forms.Padding(0);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(160, 45);
+            this.panel8.TabIndex = 27;
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
+            this.pictureBox8.Image = global::WareHouseApp.Properties.Resources.user;
+            this.pictureBox8.Location = new System.Drawing.Point(17, 4);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(50, 37);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox8.TabIndex = 25;
+            this.pictureBox8.TabStop = false;
+            // 
+            // button10
+            // 
+            this.button10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
+            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button10.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button10.Location = new System.Drawing.Point(0, 0);
+            this.button10.Margin = new System.Windows.Forms.Padding(0);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(160, 45);
+            this.button10.TabIndex = 24;
+            this.button10.Text = "Profile";
+            this.button10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button10.UseVisualStyleBackColor = false;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.pictureBox9);
+            this.panel9.Controls.Add(this.panel10);
+            this.panel9.Controls.Add(this.button9);
+            this.panel9.Location = new System.Drawing.Point(0, 90);
+            this.panel9.Margin = new System.Windows.Forms.Padding(0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(160, 45);
+            this.panel9.TabIndex = 28;
+            // 
+            // pictureBox9
+            // 
+            this.pictureBox9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
+            this.pictureBox9.Image = global::WareHouseApp.Properties.Resources.logout;
+            this.pictureBox9.Location = new System.Drawing.Point(17, 5);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(50, 37);
+            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox9.TabIndex = 26;
+            this.pictureBox9.TabStop = false;
+            // 
+            // panel10
+            // 
+            this.panel10.Location = new System.Drawing.Point(0, 44);
+            this.panel10.Margin = new System.Windows.Forms.Padding(0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(160, 45);
+            this.panel10.TabIndex = 27;
             // 
             // button9
             // 
@@ -281,99 +380,10 @@
             this.button9.UseVisualStyleBackColor = false;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.panel8);
-            this.panel7.Controls.Add(this.pictureBox8);
-            this.panel7.Controls.Add(this.button10);
-            this.panel7.Location = new System.Drawing.Point(0, 45);
-            this.panel7.Margin = new System.Windows.Forms.Padding(0);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(160, 45);
-            this.panel7.TabIndex = 26;
-            // 
-            // button10
-            // 
-            this.button10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
-            this.button10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button10.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.Location = new System.Drawing.Point(0, 0);
-            this.button10.Margin = new System.Windows.Forms.Padding(0);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(160, 45);
-            this.button10.TabIndex = 24;
-            this.button10.Text = "Profile";
-            this.button10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button10.UseVisualStyleBackColor = false;
-            // 
-            // panel8
-            // 
-            this.panel8.Location = new System.Drawing.Point(0, 44);
-            this.panel8.Margin = new System.Windows.Forms.Padding(0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(160, 45);
-            this.panel8.TabIndex = 27;
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.pictureBox9);
-            this.panel9.Controls.Add(this.panel10);
-            this.panel9.Controls.Add(this.button9);
-            this.panel9.Location = new System.Drawing.Point(0, 90);
-            this.panel9.Margin = new System.Windows.Forms.Padding(0);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(160, 45);
-            this.panel9.TabIndex = 28;
-            // 
-            // panel10
-            // 
-            this.panel10.Location = new System.Drawing.Point(0, 44);
-            this.panel10.Margin = new System.Windows.Forms.Padding(0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(160, 45);
-            this.panel10.TabIndex = 27;
-            // 
             // timer1
             // 
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // button8
-            // 
-            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
-            this.button8.BackgroundImage = global::WareHouseApp.Properties.Resources.menu;
-            this.button8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button8.Location = new System.Drawing.Point(85, 0);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 45);
-            this.button8.TabIndex = 24;
-            this.button8.UseVisualStyleBackColor = false;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
-            this.pictureBox8.Image = global::WareHouseApp.Properties.Resources.user;
-            this.pictureBox8.Location = new System.Drawing.Point(17, 4);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(50, 37);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox8.TabIndex = 25;
-            this.pictureBox8.TabStop = false;
-            // 
-            // pictureBox9
-            // 
-            this.pictureBox9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(255)))), ((int)(((byte)(144)))));
-            this.pictureBox9.Image = global::WareHouseApp.Properties.Resources.logout;
-            this.pictureBox9.Location = new System.Drawing.Point(17, 5);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(50, 37);
-            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox9.TabIndex = 26;
-            this.pictureBox9.TabStop = false;
             // 
             // pictureBox5
             // 
@@ -435,16 +445,6 @@
             this.pictureBox2.TabIndex = 12;
             this.pictureBox2.TabStop = false;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::WareHouseApp.Properties.Resources.user;
-            this.pictureBox1.Location = new System.Drawing.Point(10, 11);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(55, 52);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -469,18 +469,19 @@
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form2";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form2";
             this.Load += new System.EventHandler(this.Form2_Load);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.dropdownContainer.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            this.panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
@@ -488,7 +489,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
