@@ -97,6 +97,7 @@ namespace WareHouseApp
             this.butLogin.TabIndex = 4;
             this.butLogin.Text = "LOGIN";
             this.butLogin.UseVisualStyleBackColor = false;
+            this.butLogin.Click += new System.EventHandler(this.butLogin_Click);
             // 
             // label1
             // 

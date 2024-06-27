@@ -31,5 +31,10 @@ namespace WareHouseApp
         {
             this.Close();
         }
+
+        private void butLogin_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Logged IN");
+        }
     }
 }
