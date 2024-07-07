@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WareHouseApp.People;
+using WareHouseApp.Resources.AppStrings;
 
 namespace WareHouseApp
 {
     public partial class Form1 : Form
     {
+        Admin admin = new Admin();
+        LoginPage loginPage = new LoginPage();
         public Form1()
         {
             InitializeComponent();
@@ -34,7 +38,24 @@ namespace WareHouseApp
 
         private void butLogin_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Logged IN");
+            string UserNameTxt = txtName.Text;
+            string PassTxt = txtPassword.Text;
+            try
+            {
+                admin.Login(UserNameTxt, PassTxt);
+                Console.WriteLine("Logged IN");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel);
+            }
+            finally
+            {
+                txtPassword.Text="";
+            }
+
+            
         }
     }
 }

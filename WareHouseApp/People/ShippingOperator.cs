@@ -9,9 +9,9 @@ namespace WareHouseApp.People
     public class ShippingOperator : Person
     {
         
-        public override void Login()
+        public override bool Login(string username, string password)
         {
-            
+            return false;
         }
         public override void ChangePassword(string newPassword)
         {

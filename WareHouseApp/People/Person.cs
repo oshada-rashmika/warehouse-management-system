@@ -8,7 +8,6 @@ namespace WareHouseApp.People
 {
     abstract public class Person
     {
-        public int userID;
         public int empID;
         public string userName;
         private string password;
@@ -19,7 +18,7 @@ namespace WareHouseApp.People
                 this.password = value;
             }
         }
-        abstract public void Login();
+        abstract public bool Login(string username,string password);
         abstract public void ChangePassword(string newPassword);
         abstract public void Logout(int userID);
     }
