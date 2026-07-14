@@ -148,8 +148,8 @@ namespace WareHouseApp
 
                 if (result != null && Convert.ToInt32(result) > 0)
                 {
-                    MainDash mainDashboard = new MainDash();
-                    mainDashboard.Show();
+                    DashBoard dashboard = new DashBoard();
+                    dashboard.Show();
                     this.Hide();
                 }
                 else
