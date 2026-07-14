@@ -99,30 +99,78 @@ namespace WareHouseApp
             Action refreshGrid = () => { grid.DataSource = DatabaseHelper.ExecuteQuery("SELECT * FROM Materials"); };
             refreshGrid();
 
+            TextBox txtQty = new TextBox() { Location = new Point(300, 495), Width = 100, Text = "10" };
+            Label lblQty = new Label() { Text = "Quantity:", Location = new Point(240, 498), AutoSize = true };
+            dynamicPanel.Controls.Add(lblQty);
+            dynamicPanel.Controls.Add(txtQty);
+
             Button btnLoad = new Button() { Text = "Load Stock", Location = new Point(20, 490), Size = new Size(120, 35) };
             Button btnShip = new Button() { Text = "Ship Stock", Location = new Point(160, 490), Size = new Size(120, 35) };
             
             btnLoad.Click += (s, ev) => {
-                if (grid.SelectedRows.Count > 0)
+                if (grid.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select a material from the grid.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!int.TryParse(txtQty.Text, out int qty) || qty <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive integer for the quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                try
                 {
                     int materialID = Convert.ToInt32(grid.SelectedRows[0].Cells["MaterialID"].Value);
-                    shippingOperator.LoadStocks(materialID, 10, 1); // hardcoded qty 10, emp 1 for demo
-                    refreshGrid();
+                    bool success = shippingOperator.LoadStocks(materialID, qty, 1); // hardcoded emp 1 for demo
+                    if (success)
+                    {
+                        MessageBox.Show("Stock loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        refreshGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to load stock. Please verify the material ID and quantity.", "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                else { MessageBox.Show("Select a material first."); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while loading stock:\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
 
             btnShip.Click += (s, ev) => {
-                if (grid.SelectedRows.Count > 0)
+                if (grid.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select a material from the grid.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (!int.TryParse(txtQty.Text, out int qty) || qty <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive integer for the quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                try
                 {
                     int materialID = Convert.ToInt32(grid.SelectedRows[0].Cells["MaterialID"].Value);
-                    if (!shippingOperator.ShipStocks(materialID, 10, 1))
+                    bool success = shippingOperator.ShipStocks(materialID, qty, 1);
+                    if (success)
                     {
-                        MessageBox.Show("Insufficient stock or error.");
+                        MessageBox.Show("Stock shipped successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        refreshGrid();
                     }
-                    refreshGrid();
+                    else
+                    {
+                        MessageBox.Show("Insufficient stock or invalid request.", "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
-                else { MessageBox.Show("Select a material first."); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while shipping stock:\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
 
             dynamicPanel.Controls.Add(btnLoad);
@@ -152,11 +200,32 @@ namespace WareHouseApp
             
             Button btnAdd = new Button() { Text = "Add Customer", Location = new Point(680, 385), Size = new Size(140, 30) };
             btnAdd.Click += (s, ev) => {
-                string sql = "INSERT INTO Customers (CustomerName, Email, Phone) VALUES (@Name, @Email, @Phone)";
-                SqlParameter[] p = { new SqlParameter("@Name", txtName.Text), new SqlParameter("@Email", txtEmail.Text), new SqlParameter("@Phone", txtPhone.Text) };
-                DatabaseHelper.ExecuteNonQuery(sql, p);
-                refreshGrid();
-                txtName.Text = "Customer Name"; txtEmail.Text = "Email"; txtPhone.Text = "Phone";
+                string name = txtName.Text.Trim();
+                string email = txtEmail.Text.Trim();
+                string phone = txtPhone.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(name) || name == "Customer Name" ||
+                    string.IsNullOrWhiteSpace(email) || email == "Email" ||
+                    string.IsNullOrWhiteSpace(phone) || phone == "Phone")
+                {
+                    MessageBox.Show("All fields are required. Please fill out the customer details.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                try
+                {
+                    string sql = "INSERT INTO Customers (CustomerName, Email, Phone) VALUES (@Name, @Email, @Phone)";
+                    SqlParameter[] p = { new SqlParameter("@Name", name), new SqlParameter("@Email", email), new SqlParameter("@Phone", phone) };
+                    DatabaseHelper.ExecuteNonQuery(sql, p);
+                    
+                    MessageBox.Show("Customer added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    refreshGrid();
+                    txtName.Text = "Customer Name"; txtEmail.Text = "Email"; txtPhone.Text = "Phone";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while adding the customer:\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             };
 
             dynamicPanel.Controls.Add(txtName);

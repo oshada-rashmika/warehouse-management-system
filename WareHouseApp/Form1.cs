@@ -40,25 +40,30 @@ namespace WareHouseApp
         {
             string UserNameTxt = txtName.Text;
             string PassTxt = txtPassword.Text;
+
+            if (string.IsNullOrWhiteSpace(UserNameTxt) || string.IsNullOrWhiteSpace(PassTxt))
+            {
+                MessageBox.Show("Please enter both username and password.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
                 bool isSuccess = admin.Login(UserNameTxt, PassTxt);
                 if (isSuccess)
                 {
-                    Console.WriteLine("Logged IN");
                     Form2 form2 = new Form2();
                     form2.Show();
                     this.Hide();
                 }
                 else
                 {
-                    MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel);
+                    MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                MessageBox.Show("An unexpected error occurred during login.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"An unexpected error occurred during login.\n\nDetails: {ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
