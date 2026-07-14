@@ -71,7 +71,8 @@ namespace WareHouseApp
                 bool isSuccess = admin.Login(UserNameTxt, PassTxt);
                 if (isSuccess)
                 {
-                    SessionManager.CurrentUser = admin;
+                    SessionManager.CurrentUser = UserNameTxt;
+                    SessionManager.Role = "Admin";
                     Form2 form2 = new Form2();
                     form2.Show();
                     this.Hide();

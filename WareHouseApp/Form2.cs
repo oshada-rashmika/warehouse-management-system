@@ -39,7 +39,7 @@ namespace WareHouseApp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (!(SessionManager.CurrentUser is Admin))
+            if (SessionManager.Role != "Admin")
             {
                 MessageBox.Show(
                     "Access Denied.\n\nYou do not have permission to view the Admin Dashboard.\n" +
