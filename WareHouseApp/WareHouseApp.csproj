@@ -94,6 +94,9 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomerDash.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormSignUp.cs">
       <SubType>Form</SubType>
     </Compile>
