@@ -168,95 +168,200 @@ namespace WareHouseApp
         {
             HideDashboard();
 
-            Label title = new Label() { Text = "Warehouse Operations", Font = new Font("Arial", 16, FontStyle.Bold), Location = new Point(20, 20), AutoSize = true };
+            Label title = new Label
+            {
+                Text     = "Warehouse Operations",
+                Font     = new Font("Arial", 16, FontStyle.Bold),
+                Location = new Point(20, 20),
+                AutoSize = true
+            };
             dynamicPanel.Controls.Add(title);
 
-            Button btnBack = new Button() { Text = "Back to Dashboard", Location = new Point(650, 20), Size = new Size(150, 30) };
+            Button btnBack = new Button { Text = "Back to Dashboard", Location = new Point(650, 20), Size = new Size(150, 30) };
             btnBack.Click += (s, ev) => ShowDashboard();
             dynamicPanel.Controls.Add(btnBack);
 
-            DataGridView grid = new DataGridView() { Location = new Point(20, 70), Size = new Size(800, 400), AllowUserToAddRows = false, ReadOnly = true };
+            // Materials grid
+            DataGridView grid = new DataGridView
+            {
+                Location            = new Point(20, 70),
+                Size                = new Size(800, 300),
+                AllowUserToAddRows  = false,
+                ReadOnly            = true,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode       = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor     = System.Drawing.Color.White
+            };
             dynamicPanel.Controls.Add(grid);
 
-            Action refreshGrid = () => { grid.DataSource = DatabaseHelper.ExecuteQuery("SELECT * FROM Materials"); };
-            refreshGrid();
+            // Status label – shows loading spinner text or last action result
+            Label lblStatus = new Label
+            {
+                Location  = new Point(20, 380),
+                Size      = new Size(800, 22),
+                ForeColor = System.Drawing.Color.DimGray,
+                Font      = new Font("Arial", 9),
+                Text      = "Ready."
+            };
+            dynamicPanel.Controls.Add(lblStatus);
 
-            TextBox txtQty = new TextBox() { Location = new Point(300, 495), Width = 100, Text = "10" };
-            Label lblQty = new Label() { Text = "Quantity:", Location = new Point(240, 498), AutoSize = true };
+            // Quantity input
+            Label lblQty = new Label { Text = "Qty:", Location = new Point(240, 418), AutoSize = true };
+            TextBox txtQty = new TextBox { Location = new Point(275, 415), Width = 80, Text = "10" };
             dynamicPanel.Controls.Add(lblQty);
             dynamicPanel.Controls.Add(txtQty);
 
-            Button btnLoad = new Button() { Text = "Load Stock", Location = new Point(20, 490), Size = new Size(120, 35) };
-            Button btnShip = new Button() { Text = "Ship Stock", Location = new Point(160, 490), Size = new Size(120, 35) };
-            
-            btnLoad.Click += (s, ev) => {
-                if (grid.SelectedRows.Count == 0)
-                {
-                    MessageBox.Show("Please select a material from the grid.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (!int.TryParse(txtQty.Text, out int qty) || qty <= 0)
-                {
-                    MessageBox.Show("Please enter a valid positive integer for the quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                try
-                {
-                    int materialID = Convert.ToInt32(grid.SelectedRows[0].Cells["MaterialID"].Value);
-                    bool success = shippingOperator.LoadStocks(materialID, qty, 1); // hardcoded emp 1 for demo
-                    if (success)
-                    {
-                        MessageBox.Show("Stock loaded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        refreshGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to load stock. Please verify the material ID and quantity.", "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"An error occurred while loading stock:\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            };
-
-            btnShip.Click += (s, ev) => {
-                if (grid.SelectedRows.Count == 0)
-                {
-                    MessageBox.Show("Please select a material from the grid.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                if (!int.TryParse(txtQty.Text, out int qty) || qty <= 0)
-                {
-                    MessageBox.Show("Please enter a valid positive integer for the quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                try
-                {
-                    int materialID = Convert.ToInt32(grid.SelectedRows[0].Cells["MaterialID"].Value);
-                    bool success = shippingOperator.ShipStocks(materialID, qty, 1);
-                    if (success)
-                    {
-                        MessageBox.Show("Stock shipped successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        refreshGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Insufficient stock or invalid request.", "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"An error occurred while shipping stock:\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            };
-
+            Button btnLoad = new Button { Text = "Load Stock",  Location = new Point(20,  410), Size = new Size(120, 35) };
+            Button btnShip = new Button { Text = "Ship Stock",  Location = new Point(150, 410), Size = new Size(120, 35) };
+            Button btnLog  = new Button { Text = "View Log",    Location = new Point(570, 410), Size = new Size(100, 35) };
             dynamicPanel.Controls.Add(btnLoad);
             dynamicPanel.Controls.Add(btnShip);
+            dynamicPanel.Controls.Add(btnLog);
+
+            // Transaction log grid (hidden until btnLog clicked)
+            DataGridView logGrid = new DataGridView
+            {
+                Location            = new Point(20, 460),
+                Size                = new Size(800, 120),
+                AllowUserToAddRows  = false,
+                ReadOnly            = true,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                BackgroundColor     = System.Drawing.Color.White,
+                Visible             = false
+            };
+            dynamicPanel.Controls.Add(logGrid);
+
+            // ── Non-blocking grid refresh via BackgroundWorker ─────────────
+            // The DB query runs on a pool thread; only the DataSource assignment
+            // returns to the UI thread via RunWorkerCompleted, preventing freezing.
+            void RefreshMaterialsAsync()
+            {
+                lblStatus.Text = "Loading data…";
+                btnLoad.Enabled = false;
+                btnShip.Enabled = false;
+
+                var bw = new System.ComponentModel.BackgroundWorker();
+
+                bw.DoWork += (s, args) =>
+                {
+                    args.Result = DatabaseHelper.ExecuteQuery("SELECT MaterialID, MaterialName, MaterialCount FROM Materials ORDER BY MaterialName");
+                };
+
+                bw.RunWorkerCompleted += (s, args) =>
+                {
+                    btnLoad.Enabled = true;
+                    btnShip.Enabled = true;
+
+                    if (args.Error != null)
+                    {
+                        lblStatus.Text = "Error loading data.";
+                        MessageBox.Show($"Failed to load Materials:\n{args.Error.Message}", "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    grid.DataSource = args.Result as DataTable;
+                    lblStatus.Text  = $"Materials refreshed at {DateTime.Now:HH:mm:ss}";
+                };
+
+                bw.RunWorkerAsync();
+            }
+
+            void RefreshLogAsync()
+            {
+                var bw = new System.ComponentModel.BackgroundWorker();
+                bw.DoWork += (s, args) =>
+                {
+                    args.Result = DatabaseHelper.ExecuteQuery(
+                        @"SELECT TOP 50
+                            ST.TransactionID,
+                            M.MaterialName,
+                            ST.TransactionType,
+                            ST.Quantity,
+                            ST.TransactionDate
+                          FROM StockTransactions ST
+                          JOIN Materials M ON ST.MaterialID = M.MaterialID
+                          ORDER BY ST.TransactionDate DESC");
+                };
+                bw.RunWorkerCompleted += (s, args) =>
+                {
+                    if (args.Error != null) return;
+                    logGrid.DataSource = args.Result as DataTable;
+                };
+                bw.RunWorkerAsync();
+            }
+
+            // Initial load
+            RefreshMaterialsAsync();
+
+            // ── Stock action helper ────────────────────────────────────────
+            void ExecuteStockAction(bool isLoad)
+            {
+                if (grid.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Please select a material row first.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                if (!int.TryParse(txtQty.Text, out int qty) || qty <= 0)
+                {
+                    MessageBox.Show("Please enter a valid positive integer for the quantity.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int materialID = Convert.ToInt32(grid.SelectedRows[0].Cells["MaterialID"].Value);
+                btnLoad.Enabled = false;
+                btnShip.Enabled = false;
+                lblStatus.Text  = isLoad ? "Loading stock…" : "Shipping stock…";
+
+                // DB write also runs off the UI thread
+                var bw = new System.ComponentModel.BackgroundWorker();
+                bw.DoWork += (s, args) =>
+                {
+                    bool success = isLoad
+                        ? shippingOperator.LoadStocks(materialID, qty, 1)
+                        : shippingOperator.ShipStocks(materialID, qty, 1);
+                    args.Result = success;
+                };
+                bw.RunWorkerCompleted += (s, args) =>
+                {
+                    btnLoad.Enabled = true;
+                    btnShip.Enabled = true;
+
+                    if (args.Error != null)
+                    {
+                        lblStatus.Text = "Error during operation.";
+                        MessageBox.Show($"An error occurred:\n{args.Error.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    bool ok = (bool)args.Result;
+                    if (ok)
+                    {
+                        lblStatus.Text = isLoad
+                            ? $"Loaded {qty} unit(s) at {DateTime.Now:HH:mm:ss}"
+                            : $"Shipped {qty} unit(s) at {DateTime.Now:HH:mm:ss}";
+                        RefreshMaterialsAsync();
+                        if (logGrid.Visible) RefreshLogAsync();
+                    }
+                    else
+                    {
+                        string msg = isLoad
+                            ? "Load failed. Verify the Material ID exists."
+                            : "Ship failed. Insufficient stock or invalid Material ID.";
+                        MessageBox.Show(msg, "Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        lblStatus.Text = "Operation failed.";
+                    }
+                };
+                bw.RunWorkerAsync();
+            }
+
+            btnLoad.Click += (s, ev) => ExecuteStockAction(isLoad: true);
+            btnShip.Click += (s, ev) => ExecuteStockAction(isLoad: false);
+            btnLog.Click  += (s, ev) =>
+            {
+                logGrid.Visible = !logGrid.Visible;
+                btnLog.Text     = logGrid.Visible ? "Hide Log" : "View Log";
+                if (logGrid.Visible) RefreshLogAsync();
+            };
         }
 
         private void LoadCustomerManagementView()
