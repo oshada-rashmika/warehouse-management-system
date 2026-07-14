@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,22 +42,28 @@ namespace WareHouseApp
             string PassTxt = txtPassword.Text;
             try
             {
-                admin.Login(UserNameTxt, PassTxt);
-                Console.WriteLine("Logged IN");
-
+                bool isSuccess = admin.Login(UserNameTxt, PassTxt);
+                if (isSuccess)
+                {
+                    Console.WriteLine("Logged IN");
+                    Form2 form2 = new Form2();
+                    form2.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel);
+                }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine(ex);
-                MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel);
+                MessageBox.Show("An unexpected error occurred during login.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                txtPassword.Text="";
+                txtPassword.Text = "";
             }
-
-            
         }
     }
 }
