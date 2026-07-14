@@ -48,6 +48,8 @@ namespace WareHouseApp
             }
             catch (Exception ex)
             {
+
+                Console.WriteLine(ex);
                 MessageBox.Show(loginPage.LoginErrorTitleEn, loginPage.LoginErrorMessageEn, MessageBoxButtons.RetryCancel);
             }
             finally
