@@ -97,6 +97,9 @@
     <Compile Include="CustomerDash.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="InventoryDash.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="FormSignUp.cs">
       <SubType>Form</SubType>
     </Compile>
