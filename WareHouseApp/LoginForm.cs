@@ -137,17 +137,20 @@ namespace WareHouseApp
 
             try
             {
-                string query = "SELECT COUNT(1) FROM Person WHERE Username = @User AND Password = @Pass";
+                string query = "SELECT Role FROM Person WHERE Username = @User AND Password = @Pass";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@User", username),
                     new SqlParameter("@Pass", password)
                 };
 
-                object result = DatabaseHelper.ExecuteScalar(query, parameters);
+                DataTable result = DatabaseHelper.ExecuteQuery(query, parameters);
 
-                if (result != null && Convert.ToInt32(result) > 0)
+                if (result != null && result.Rows.Count > 0)
                 {
+                    SessionManager.Username = username;
+                    SessionManager.Role = result.Rows[0]["Role"].ToString();
+
                     DashBoard dashboard = new DashBoard();
                     dashboard.Show();
                     this.Hide();
