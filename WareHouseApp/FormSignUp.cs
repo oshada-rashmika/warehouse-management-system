@@ -1,124 +1,190 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace WareHouseApp
 {
     public class FormSignUp : Form
     {
-        private Label    lblTitle;
-        private Label    lblUsername;
-        private Label    lblPassword;
-        private Label    lblConfirmPassword;
-        private TextBox  txtUsername;
-        private TextBox  txtPassword;
-        private TextBox  txtConfirmPassword;
-        private Button   btnRegister;
-        private Button   btnCancel;
+        private Panel pnlBackground;
+        private Label lblTitle;
+        private Label lblUsername;
+        private TextBox txtUsername;
+        private Label lblPassword;
+        private TextBox txtPassword;
+        private Label lblConfirmPassword;
+        private TextBox txtConfirmPassword;
+        private Button btnRegister;
+        private LinkLabel lnkReturn;
 
         public FormSignUp()
         {
-            BuildUI();
+            InitializeUI();
         }
 
-        private void BuildUI()
+        private void InitializeUI()
         {
-            this.Text            = "Create Account";
-            this.ClientSize      = new System.Drawing.Size(480, 360);
+            this.Text = "Register - Warehouse Management System";
+            this.ClientSize = new Size(400, 520);
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.StartPosition   = FormStartPosition.CenterParent;
-            this.MaximizeBox     = false;
-            this.MinimizeBox     = false;
-            this.BackColor       = System.Drawing.Color.FromArgb(245, 245, 245);
+            this.StartPosition = FormStartPosition.CenterParent;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.BackColor = Color.FromArgb(32, 34, 37);
+
+            pnlBackground = new Panel
+            {
+                Size = new Size(320, 430),
+                Location = new Point(40, 45),
+                BackColor = Color.FromArgb(47, 49, 54),
+                BorderStyle = BorderStyle.None
+            };
+            this.Controls.Add(pnlBackground);
 
             lblTitle = new Label
             {
-                Text      = "Create New Account",
-                Font      = new System.Drawing.Font("Microsoft Sans Serif", 16f, System.Drawing.FontStyle.Bold),
-                ForeColor = System.Drawing.Color.FromArgb(5, 146, 18),
-                Location  = new System.Drawing.Point(80, 20),
-                Size      = new System.Drawing.Size(330, 40),
-                TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+                Text = "Create Account",
+                Font = new Font("Segoe UI", 20f, FontStyle.Bold),
+                ForeColor = Color.White,
+                AutoSize = false,
+                Size = new Size(320, 40),
+                Location = new Point(0, 20),
+                TextAlign = ContentAlignment.MiddleCenter
             };
+            pnlBackground.Controls.Add(lblTitle);
 
-            lblUsername = MakeLabel("Username:", 90);
-            txtUsername = MakeTextBox(90);
+            lblUsername = new Label
+            {
+                Text = "USERNAME",
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = Color.FromArgb(185, 187, 190),
+                Location = new Point(30, 90),
+                AutoSize = true
+            };
+            pnlBackground.Controls.Add(lblUsername);
 
-            lblPassword = MakeLabel("Password:", 150);
-            txtPassword = MakeTextBox(150, isPassword: true);
+            txtUsername = new TextBox
+            {
+                Location = new Point(30, 115),
+                Size = new Size(260, 30),
+                Font = new Font("Segoe UI", 12f),
+                BackColor = Color.FromArgb(64, 68, 75),
+                ForeColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            pnlBackground.Controls.Add(txtUsername);
 
-            lblConfirmPassword = MakeLabel("Confirm Password:", 210);
-            txtConfirmPassword = MakeTextBox(210, isPassword: true);
+            lblPassword = new Label
+            {
+                Text = "PASSWORD",
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = Color.FromArgb(185, 187, 190),
+                Location = new Point(30, 165),
+                AutoSize = true
+            };
+            pnlBackground.Controls.Add(lblPassword);
+
+            txtPassword = new TextBox
+            {
+                Location = new Point(30, 190),
+                Size = new Size(260, 30),
+                Font = new Font("Segoe UI", 12f),
+                BackColor = Color.FromArgb(64, 68, 75),
+                ForeColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                PasswordChar = '•'
+            };
+            pnlBackground.Controls.Add(txtPassword);
+
+            lblConfirmPassword = new Label
+            {
+                Text = "CONFIRM PASSWORD",
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = Color.FromArgb(185, 187, 190),
+                Location = new Point(30, 240),
+                AutoSize = true
+            };
+            pnlBackground.Controls.Add(lblConfirmPassword);
+
+            txtConfirmPassword = new TextBox
+            {
+                Location = new Point(30, 265),
+                Size = new Size(260, 30),
+                Font = new Font("Segoe UI", 12f),
+                BackColor = Color.FromArgb(64, 68, 75),
+                ForeColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                PasswordChar = '•'
+            };
+            pnlBackground.Controls.Add(txtConfirmPassword);
 
             btnRegister = new Button
             {
-                Text      = "Register",
-                Location  = new System.Drawing.Point(110, 280),
-                Size      = new System.Drawing.Size(110, 38),
-                BackColor = System.Drawing.Color.FromArgb(155, 236, 0),
+                Text = "Register",
+                Location = new Point(30, 325),
+                Size = new Size(260, 45),
+                Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+                BackColor = Color.FromArgb(67, 181, 129),
+                ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
-                Font      = new System.Drawing.Font("Microsoft Sans Serif", 10f, System.Drawing.FontStyle.Bold)
+                Cursor = Cursors.Hand
             };
+            btnRegister.FlatAppearance.BorderSize = 0;
             btnRegister.Click += BtnRegister_Click;
+            pnlBackground.Controls.Add(btnRegister);
 
-            btnCancel = new Button
+            lnkReturn = new LinkLabel
             {
-                Text      = "Cancel",
-                Location  = new System.Drawing.Point(240, 280),
-                Size      = new System.Drawing.Size(110, 38),
-                BackColor = System.Drawing.Color.FromArgb(220, 80, 60),
-                ForeColor = System.Drawing.Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font      = new System.Drawing.Font("Microsoft Sans Serif", 10f, System.Drawing.FontStyle.Bold)
+                Text = "Already have an account? Login here.",
+                Location = new Point(0, 385),
+                Size = new Size(320, 20),
+                Font = new Font("Segoe UI", 9f),
+                LinkColor = Color.FromArgb(114, 137, 218),
+                ActiveLinkColor = Color.White,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Cursor = Cursors.Hand
             };
-            btnCancel.Click += (s, e) => this.Close();
-
-            this.Controls.AddRange(new System.Windows.Forms.Control[]
-            {
-                lblTitle,
-                lblUsername,       txtUsername,
-                lblPassword,       txtPassword,
-                lblConfirmPassword, txtConfirmPassword,
-                btnRegister,       btnCancel
-            });
+            lnkReturn.Click += (s, e) => this.Close();
+            pnlBackground.Controls.Add(lnkReturn);
         }
 
         private void BtnRegister_Click(object sender, EventArgs e)
         {
-            string username        = txtUsername.Text.Trim();
-            string password        = txtPassword.Text;
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text;
             string confirmPassword = txtConfirmPassword.Text;
 
             if (string.IsNullOrWhiteSpace(username))
             {
-                ShowWarning("Username cannot be empty.");
+                MessageBox.Show("Username cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsername.Focus();
                 return;
             }
 
             if (username.Contains(" "))
             {
-                ShowWarning("Username must not contain spaces.");
+                MessageBox.Show("Username must not contain spaces.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsername.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(password))
             {
-                ShowWarning("Password cannot be empty.");
+                MessageBox.Show("Password cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPassword.Focus();
                 return;
             }
-            
+
             if (password.Length < 6)
             {
-                ShowWarning("Password must be at least 6 characters long.");
+                MessageBox.Show("Password must be at least 6 characters long.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPassword.Focus();
                 return;
             }
 
             if (password != confirmPassword)
             {
-                ShowWarning("Passwords do not match. Please re-enter.");
+                MessageBox.Show("Passwords do not match. Please re-enter.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtConfirmPassword.Focus();
                 return;
             }
@@ -138,46 +204,18 @@ namespace WareHouseApp
                 }
                 else
                 {
-                    ShowWarning($"The username \"{username}\" is already in use. Please choose a different one.");
+                    MessageBox.Show($"The username \"{username}\" is already in use. Please choose a different one.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtUsername.Focus();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"An unexpected error occurred during registration.\n\nDetails: {ex.Message}",
+                    $"An unexpected database error occurred during registration.\n\nDetails: {ex.Message}",
                     "System Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
-        }
-
-        private static void ShowWarning(string message)
-        {
-            MessageBox.Show(message, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
-
-        private static Label MakeLabel(string text, int top)
-        {
-            return new Label
-            {
-                Text      = text,
-                Location  = new System.Drawing.Point(40, top + 5),
-                Size      = new System.Drawing.Size(150, 25),
-                Font      = new System.Drawing.Font("Microsoft Sans Serif", 10f),
-                TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            };
-        }
-
-        private static TextBox MakeTextBox(int top, bool isPassword = false)
-        {
-            return new TextBox
-            {
-                Location     = new System.Drawing.Point(200, top),
-                Size         = new System.Drawing.Size(230, 32),
-                Font         = new System.Drawing.Font("Microsoft Sans Serif", 11f),
-                PasswordChar = isPassword ? '*' : '\0'
-            };
         }
     }
 }
