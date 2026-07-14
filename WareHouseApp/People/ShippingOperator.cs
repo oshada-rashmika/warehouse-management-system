@@ -41,15 +41,63 @@ namespace WareHouseApp.People
 
         }
 
-        public int LoadStocks()
+        public bool LoadStocks(int materialID, int qty, int employeeID)
         {
-            int stocks = 0;
-            return stocks;
+            if (qty <= 0) return false;
+
+            string updateSql = "UPDATE Materials SET MaterialCount = MaterialCount + @Qty WHERE MaterialID = @ID";
+            SqlParameter[] updateParams = new SqlParameter[]
+            {
+                new SqlParameter("@Qty", qty),
+                new SqlParameter("@ID", materialID)
+            };
+            int rows = DatabaseHelper.ExecuteNonQuery(updateSql, updateParams);
+            
+            if (rows > 0)
+            {
+                string logSql = "INSERT INTO StockTransactions (MaterialID, EmployeeID, TransactionType, Quantity) VALUES (@ID, @EmpID, 'Load', @Qty)";
+                SqlParameter[] logParams = new SqlParameter[]
+                {
+                    new SqlParameter("@ID", materialID),
+                    new SqlParameter("@EmpID", employeeID),
+                    new SqlParameter("@Qty", qty)
+                };
+                DatabaseHelper.ExecuteNonQuery(logSql, logParams);
+                return true;
+            }
+            return false;
         }
-        public int ShipStocks()
+
+        public bool ShipStocks(int materialID, int qty, int employeeID)
         {
-            int stocks = 0;
-            return stocks;
+            if (qty <= 0) return false;
+            
+            string checkSql = "SELECT MaterialCount FROM Materials WHERE MaterialID = @ID";
+            SqlParameter[] checkParams = new SqlParameter[] { new SqlParameter("@ID", materialID) };
+            object countResult = DatabaseHelper.ExecuteScalar(checkSql, checkParams);
+            if (countResult == null || Convert.ToInt32(countResult) < qty) return false;
+
+            string updateSql = "UPDATE Materials SET MaterialCount = MaterialCount - @Qty WHERE MaterialID = @ID";
+            SqlParameter[] updateParams = new SqlParameter[]
+            {
+                new SqlParameter("@Qty", qty),
+                new SqlParameter("@ID", materialID)
+            };
+            int rows = DatabaseHelper.ExecuteNonQuery(updateSql, updateParams);
+
+            if (rows > 0)
+            {
+                string logSql = "INSERT INTO StockTransactions (MaterialID, EmployeeID, TransactionType, Quantity) VALUES (@ID, @EmpID, 'Ship', @Qty)";
+                SqlParameter[] logParams = new SqlParameter[]
+                {
+                    new SqlParameter("@ID", materialID),
+                    new SqlParameter("@EmpID", employeeID),
+                    new SqlParameter("@Qty", qty)
+                };
+                DatabaseHelper.ExecuteNonQuery(logSql, logParams);
+                return true;
+            }
+            return false;
         }
     }
 }
