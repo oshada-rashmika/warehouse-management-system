@@ -28,6 +28,7 @@ namespace WareHouseApp.People
 
                 if (dbHash == inputHash && dbRole == "Admin")
                 {
+                    this.userName = username;
                     return true;
                 }
             }

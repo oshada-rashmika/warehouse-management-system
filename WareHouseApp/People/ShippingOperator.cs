@@ -27,6 +27,7 @@ namespace WareHouseApp.People
 
                 if (dbHash == inputHash && dbRole == "ShippingOperator")
                 {
+                    this.userName = username;
                     return true;
                 }
             }

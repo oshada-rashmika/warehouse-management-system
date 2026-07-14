@@ -181,7 +181,6 @@ namespace WareHouseApp
             btnBack.Click += (s, ev) => ShowDashboard();
             dynamicPanel.Controls.Add(btnBack);
 
-            // Materials grid
             DataGridView grid = new DataGridView
             {
                 Location            = new Point(20, 70),
@@ -194,7 +193,6 @@ namespace WareHouseApp
             };
             dynamicPanel.Controls.Add(grid);
 
-            // Status label – shows loading spinner text or last action result
             Label lblStatus = new Label
             {
                 Location  = new Point(20, 380),
@@ -205,7 +203,6 @@ namespace WareHouseApp
             };
             dynamicPanel.Controls.Add(lblStatus);
 
-            // Quantity input
             Label lblQty = new Label { Text = "Qty:", Location = new Point(240, 418), AutoSize = true };
             TextBox txtQty = new TextBox { Location = new Point(275, 415), Width = 80, Text = "10" };
             dynamicPanel.Controls.Add(lblQty);
@@ -218,7 +215,6 @@ namespace WareHouseApp
             dynamicPanel.Controls.Add(btnShip);
             dynamicPanel.Controls.Add(btnLog);
 
-            // Transaction log grid (hidden until btnLog clicked)
             DataGridView logGrid = new DataGridView
             {
                 Location            = new Point(20, 460),
@@ -231,9 +227,6 @@ namespace WareHouseApp
             };
             dynamicPanel.Controls.Add(logGrid);
 
-            // ── Non-blocking grid refresh via BackgroundWorker ─────────────
-            // The DB query runs on a pool thread; only the DataSource assignment
-            // returns to the UI thread via RunWorkerCompleted, preventing freezing.
             void RefreshMaterialsAsync()
             {
                 lblStatus.Text = "Loading data…";
@@ -290,10 +283,8 @@ namespace WareHouseApp
                 bw.RunWorkerAsync();
             }
 
-            // Initial load
             RefreshMaterialsAsync();
 
-            // ── Stock action helper ────────────────────────────────────────
             void ExecuteStockAction(bool isLoad)
             {
                 if (grid.SelectedRows.Count == 0)
@@ -312,7 +303,6 @@ namespace WareHouseApp
                 btnShip.Enabled = false;
                 lblStatus.Text  = isLoad ? "Loading stock…" : "Shipping stock…";
 
-                // DB write also runs off the UI thread
                 var bw = new System.ComponentModel.BackgroundWorker();
                 bw.DoWork += (s, args) =>
                 {
