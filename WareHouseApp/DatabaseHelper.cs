@@ -38,7 +38,6 @@ namespace WareHouseApp
             }
             catch (Exception ex)
             {
-                // In a commercial app, use a proper logging framework (e.g., NLog, log4net, Serilog)
                 Console.WriteLine($"[DatabaseHelper Error] ExecuteQuery failed: {ex.Message}\nQuery: {query}");
             }
             return dataTable;
@@ -112,27 +111,24 @@ namespace WareHouseApp
 
         public static bool IsUsernameTaken(string username)
         {
-            string query = "SELECT COUNT(1) FROM Employees WHERE UserName = @User";
+            string query = "SELECT COUNT(1) FROM Person WHERE Username = @User";
             SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@User", username) };
             object result = ExecuteScalar(query, parameters);
             return result != null && Convert.ToInt32(result) > 0;
         }
 
-        public static bool RegisterEmployee(string username, string plainTextPassword, string fullName, string role)
+        public static bool RegisterEmployee(string username, string plainTextPassword)
         {
             if (IsUsernameTaken(username))
             {
                 return false;
             }
 
-            string hashedPassword = HashPassword(plainTextPassword);
-            string query = "INSERT INTO Employees (UserName, PasswordHash, FullName, Role) VALUES (@User, @Hash, @Name, @Role)";
+            string query = "INSERT INTO Person (Username, Password) VALUES (@User, @Pass)";
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@User", username),
-                new SqlParameter("@Hash", hashedPassword),
-                new SqlParameter("@Name", fullName),
-                new SqlParameter("@Role", role)
+                new SqlParameter("@Pass", plainTextPassword)
             };
 
             int rowsAffected = ExecuteNonQuery(query, parameters);

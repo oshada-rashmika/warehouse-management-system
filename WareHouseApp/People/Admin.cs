@@ -13,24 +13,18 @@ namespace WareHouseApp.People
 
         public override bool Login(string username, string password)
         {
-            string query = "SELECT PasswordHash, Role FROM Employees WHERE UserName = @User";
+            string query = "SELECT COUNT(1) FROM Person WHERE Username = @User AND Password = @Pass";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@User", username)
+                new SqlParameter("@User", username),
+                new SqlParameter("@Pass", password)
             };
 
-            DataTable result = DatabaseHelper.ExecuteQuery(query, parameters);
-            if (result.Rows.Count > 0)
+            object result = DatabaseHelper.ExecuteScalar(query, parameters);
+            if (result != null && Convert.ToInt32(result) > 0)
             {
-                string dbHash = result.Rows[0]["PasswordHash"].ToString();
-                string dbRole = result.Rows[0]["Role"].ToString();
-                string inputHash = DatabaseHelper.HashPassword(password);
-
-                if (dbHash == inputHash && dbRole == "Admin")
-                {
-                    this.userName = username;
-                    return true;
-                }
+                this.userName = username;
+                return true;
             }
             return false;
         }
