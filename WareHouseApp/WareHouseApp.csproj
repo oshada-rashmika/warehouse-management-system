@@ -82,6 +82,15 @@
     <Compile Include="MainDash.Designer.cs">
       <DependentUpon>MainDash.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSignUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Material\Material.cs" />
     <Compile Include="People\Admin.cs" />
     <Compile Include="People\Person.cs" />

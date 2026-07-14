@@ -1,4 +1,4 @@
-﻿
+
 namespace WareHouseApp
 {
     partial class Form1
@@ -107,6 +107,7 @@ namespace WareHouseApp
             // 
             // Form1
             // 
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;

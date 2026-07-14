@@ -109,5 +109,34 @@ namespace WareHouseApp
                 return builder.ToString();
             }
         }
+
+        public static bool IsUsernameTaken(string username)
+        {
+            string query = "SELECT COUNT(1) FROM Employees WHERE UserName = @User";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@User", username) };
+            object result = ExecuteScalar(query, parameters);
+            return result != null && Convert.ToInt32(result) > 0;
+        }
+
+        public static bool RegisterEmployee(string username, string plainTextPassword, string fullName, string role)
+        {
+            if (IsUsernameTaken(username))
+            {
+                return false;
+            }
+
+            string hashedPassword = HashPassword(plainTextPassword);
+            string query = "INSERT INTO Employees (UserName, PasswordHash, FullName, Role) VALUES (@User, @Hash, @Name, @Role)";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@User", username),
+                new SqlParameter("@Hash", hashedPassword),
+                new SqlParameter("@Name", fullName),
+                new SqlParameter("@Role", role)
+            };
+
+            int rowsAffected = ExecuteNonQuery(query, parameters);
+            return rowsAffected > 0;
+        }
     }
 }

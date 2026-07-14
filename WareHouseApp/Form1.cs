@@ -36,6 +36,25 @@ namespace WareHouseApp
             this.Close();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            LinkLabel lnkSignUp = new LinkLabel
+            {
+                Text      = "Don't have an account? Sign Up",
+                Location  = new System.Drawing.Point(303, 455),
+                Size      = new System.Drawing.Size(300, 25),
+                Font      = new System.Drawing.Font("Microsoft Sans Serif", 10f),
+                TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+            };
+            lnkSignUp.LinkClicked += (s, ev) =>
+            {
+                FormSignUp signUpForm = new FormSignUp();
+                signUpForm.ShowDialog(this);
+            };
+            this.Controls.Add(lnkSignUp);
+            lnkSignUp.BringToFront();
+        }
+
         private void butLogin_Click(object sender, EventArgs e)
         {
             string UserNameTxt = txtName.Text;
