@@ -39,7 +39,97 @@ namespace WareHouseApp
 
         private void button2_Click(object sender, EventArgs e)
         {
+            // ── OOP Authorization Gate ──────────────────────────────
+            // Only an explicitly authenticated Admin instance may view this panel.
+            if (!(SessionManager.CurrentUser is Admin))
+            {
+                MessageBox.Show(
+                    "Access Denied.\n\nYou do not have permission to view the Admin Dashboard.\n" +
+                    "This area is restricted to users with the Administrator role.",
+                    "Unauthorized Access",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Stop);
+                return;
+            }
 
+            LoadAdminDashboardView();
+        }
+
+        private void LoadAdminDashboardView()
+        {
+            HideDashboard();
+
+            // ── Title ───────────────────────────────────────────────
+            Label title = new Label
+            {
+                Text     = "Admin Dashboard — Employees",
+                Font     = new System.Drawing.Font("Arial", 16, FontStyle.Bold),
+                Location = new System.Drawing.Point(20, 20),
+                AutoSize = true
+            };
+            dynamicPanel.Controls.Add(title);
+
+            // ── Back button ─────────────────────────────────────────
+            Button btnBack = new Button
+            {
+                Text     = "Back to Dashboard",
+                Location = new System.Drawing.Point(650, 20),
+                Size     = new System.Drawing.Size(160, 30)
+            };
+            btnBack.Click += (s, ev) => ShowDashboard();
+            dynamicPanel.Controls.Add(btnBack);
+
+            // ── DataGridView ────────────────────────────────────────
+            DataGridView grid = new DataGridView
+            {
+                Location          = new System.Drawing.Point(20, 70),
+                Size              = new System.Drawing.Size(800, 460),
+                AllowUserToAddRows = false,
+                ReadOnly          = true,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                SelectionMode     = DataGridViewSelectionMode.FullRowSelect,
+                BackgroundColor   = System.Drawing.Color.White
+            };
+            dynamicPanel.Controls.Add(grid);
+
+            // ── Load data ───────────────────────────────────────────
+            try
+            {
+                // Only SELECT the display-safe columns; PasswordHash is excluded
+                // from rendering but the query still maps to the exact DB column names.
+                string query = @"
+                    SELECT
+                        UserName     AS [Username],
+                        FullName     AS [Full Name],
+                        Role         AS [Role]
+                    FROM Employees
+                    ORDER BY Role, UserName";
+
+                DataTable employeeData = DatabaseHelper.ExecuteQuery(query);
+
+                if (employeeData == null || employeeData.Rows.Count == 0)
+                {
+                    Label lblEmpty = new Label
+                    {
+                        Text     = "No employee records found in the database.",
+                        Location = new System.Drawing.Point(20, 120),
+                        AutoSize = true,
+                        Font     = new System.Drawing.Font("Arial", 11)
+                    };
+                    dynamicPanel.Controls.Add(lblEmpty);
+                    return;
+                }
+
+                grid.DataSource = employeeData;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Failed to load employee data from the database.\n\nDetails: {ex.Message}",
+                    "Database Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -274,6 +364,8 @@ namespace WareHouseApp
 
         private void button9_Click(object sender, EventArgs e)
         {
+            // Clear the global session before returning to login
+            SessionManager.ClearSession();
             Form1 form1 = new Form1();
             form1.Show();
             this.Hide();

@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="SessionManager.cs" />
     <Compile Include="DashBoard.cs">
       <SubType>Form</SubType>
     </Compile>
