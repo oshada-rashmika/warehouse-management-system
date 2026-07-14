@@ -39,8 +39,6 @@ namespace WareHouseApp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            // ── OOP Authorization Gate ──────────────────────────────
-            // Only an explicitly authenticated Admin instance may view this panel.
             if (!(SessionManager.CurrentUser is Admin))
             {
                 MessageBox.Show(
@@ -59,7 +57,6 @@ namespace WareHouseApp
         {
             HideDashboard();
 
-            // ── Title ───────────────────────────────────────────────
             Label title = new Label
             {
                 Text     = "Admin Dashboard — Employees",
@@ -69,7 +66,6 @@ namespace WareHouseApp
             };
             dynamicPanel.Controls.Add(title);
 
-            // ── Back button ─────────────────────────────────────────
             Button btnBack = new Button
             {
                 Text     = "Back to Dashboard",
@@ -79,7 +75,6 @@ namespace WareHouseApp
             btnBack.Click += (s, ev) => ShowDashboard();
             dynamicPanel.Controls.Add(btnBack);
 
-            // ── DataGridView ────────────────────────────────────────
             DataGridView grid = new DataGridView
             {
                 Location          = new System.Drawing.Point(20, 70),
@@ -92,11 +87,8 @@ namespace WareHouseApp
             };
             dynamicPanel.Controls.Add(grid);
 
-            // ── Load data ───────────────────────────────────────────
             try
             {
-                // Only SELECT the display-safe columns; PasswordHash is excluded
-                // from rendering but the query still maps to the exact DB column names.
                 string query = @"
                     SELECT
                         UserName     AS [Username],
@@ -364,7 +356,6 @@ namespace WareHouseApp
 
         private void button9_Click(object sender, EventArgs e)
         {
-            // Clear the global session before returning to login
             SessionManager.ClearSession();
             Form1 form1 = new Form1();
             form1.Show();

@@ -71,7 +71,6 @@ namespace WareHouseApp
                 bool isSuccess = admin.Login(UserNameTxt, PassTxt);
                 if (isSuccess)
                 {
-                    // Register the authenticated user globally so all forms can check role
                     SessionManager.CurrentUser = admin;
                     Form2 form2 = new Form2();
                     form2.Show();
