@@ -4,12 +4,12 @@ namespace WareHouseApp
 {
     public static class SessionManager
     {
-        public static string Username { get; set; } = null;
+        public static string CurrentUser { get; set; } = null;
         public static string Role { get; set; } = null;
 
         public static void ClearSession()
         {
-            Username = null;
+            CurrentUser = null;
             Role = null;
         }
     }

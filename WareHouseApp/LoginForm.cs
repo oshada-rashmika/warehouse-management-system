@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
@@ -148,7 +149,7 @@ namespace WareHouseApp
 
                 if (result != null && result.Rows.Count > 0)
                 {
-                    SessionManager.Username = username;
+                    SessionManager.CurrentUser = username;
                     SessionManager.Role = result.Rows[0]["Role"].ToString();
 
                     DashBoard dashboard = new DashBoard();
