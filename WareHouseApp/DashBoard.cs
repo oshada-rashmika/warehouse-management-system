@@ -40,9 +40,32 @@ namespace WareHouseApp
             button2.Text = "Customers";
             button3.Text = "Inventory";
 
+            try
+            {
+                string imagePath = @"C:\Users\MSI\Downloads\CS107.3 Object Oriented Programming with C#\WareHouseApp - repeat coursework\WareHouseApp - repeat coursework\WareHouseApp\Resources\logout.png";
+                btnLogout.Image = Image.FromFile(imagePath);
+                btnLogout.ImageAlign = ContentAlignment.MiddleLeft;
+                btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UI Warning] Could not load logout icon: {ex.Message}");
+            }
+            
             button1.Click += Button1_Click;
             button2.Click += Button2_Click;
             button3.Click += Button3_Click;
+            btnLogout.Click += BtnLogout_Click;
+        }
+
+        private void BtnLogout_Click(object sender, EventArgs e)
+        {
+            SessionManager.ClearSession();
+
+            LoginForm newLogin = new LoginForm();
+            newLogin.Show();
+
+            this.Close();
         }
 
         private void DashBoard_Load(object sender, EventArgs e)
