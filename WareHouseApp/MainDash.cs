@@ -139,7 +139,7 @@ namespace WareHouseApp
             this.panel3.Controls.Add(gridEmployees);
         }
 
-        private void RefreshData()
+        public void RefreshData()
         {
             try
             {

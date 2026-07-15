@@ -122,7 +122,7 @@ namespace WareHouseApp
             panel3.Controls.Add(gridCustomers);
         }
 
-        private void RefreshData(string searchTerm = "")
+        public void RefreshData(string searchTerm = "")
         {
             try
             {

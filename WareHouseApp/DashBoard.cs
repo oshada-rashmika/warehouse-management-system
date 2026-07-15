@@ -164,6 +164,19 @@ namespace WareHouseApp
                 childForm.TopLevel = false;
                 childForm.FormBorderStyle = FormBorderStyle.None;
             }
+            
+            if (activeModule is CustomerDash customerDash)
+            {
+                customerDash.RefreshData();
+            }
+            else if (activeModule is InventoryDash inventoryDash)
+            {
+                inventoryDash.RefreshData();
+            }
+            else if (activeModule is MainDash mainDash)
+            {
+                mainDash.RefreshData();
+            }
 
             activeModule.Dock = DockStyle.Fill;
             workspacePanel.Controls.Add(activeModule);

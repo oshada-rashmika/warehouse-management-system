@@ -128,7 +128,7 @@ namespace WareHouseApp
             panel3.Controls.Add(gridInventory);
         }
 
-        private void RefreshData()
+        public void RefreshData()
         {
             try
             {
