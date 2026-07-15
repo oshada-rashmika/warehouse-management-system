@@ -35,17 +35,18 @@ namespace WareHouseApp
             inventoryDash.Size = new Size(806, 510);
             inventoryDash.Visible = false;
             this.Controls.Add(inventoryDash);
-
+            
             button1.Text = "Employees";
             button2.Text = "Customers";
             button3.Text = "Inventory";
+            button8.Text = "Settings";
+            button7.Text = "Profile";
 
             try
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
                 string imagePath = System.IO.Path.Combine(baseDir, "Resources", "logout.png");
-
-                // Fallback for development run (e.g. running from bin/Debug or bin/Release)
+                
                 if (!System.IO.File.Exists(imagePath))
                 {
                     imagePath = System.IO.Path.Combine(baseDir, "..", "..", "Resources", "logout.png");
@@ -96,6 +97,54 @@ namespace WareHouseApp
             else
             {
                 ShowModule(mainDash1);
+            }
+            
+            AdjustHeaderLayout();
+
+            LoadProfileIcon();
+        }
+
+        private void AdjustHeaderLayout()
+        {
+            int margin = 12;
+            int spacing = 10;
+
+            button7.Width = 115;
+            button7.Left = panel2.Width - button7.Width - margin;
+
+            button8.Width = 90;
+            button8.Left = button7.Left - button8.Width - spacing;
+        }
+
+        private void LoadProfileIcon()
+        {
+            try
+            {
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string filename = SessionManager.Role == "Admin" ? "administrator.png" : "user.png";
+                string imagePath = System.IO.Path.Combine(baseDir, "Resources", filename);
+
+                if (!System.IO.File.Exists(imagePath))
+                {
+                    imagePath = System.IO.Path.Combine(baseDir, "..", "..", "Resources", filename);
+                }
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    Image original = Image.FromFile(imagePath);
+                    button7.Image = new Bitmap(original, new Size(24, 24));
+                    button7.ImageAlign = ContentAlignment.MiddleLeft;
+                    button7.TextImageRelation = TextImageRelation.ImageBeforeText;
+                    button7.Padding = new Padding(8, 0, 0, 0); // Nicely align the icon inside the button
+                }
+                else
+                {
+                    Console.WriteLine($"[UI Warning] Profile icon '{filename}' not found in resources folder.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[UI Warning] Failed to load profile icon: {ex.Message}");
             }
         }
 
