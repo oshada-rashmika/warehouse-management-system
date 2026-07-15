@@ -29,13 +29,28 @@ namespace WareHouseApp
             this.Size = new Size(806, 510);
             this.BackColor = SystemColors.Control;
 
-            panel1 = new Panel { BackColor = SystemColors.ButtonHighlight, Location = new Point(42, 45), Size = new Size(330, 189) };
-            panel2 = new Panel { BackColor = SystemColors.ButtonHighlight, Location = new Point(444, 45), Size = new Size(330, 189) };
-            panel3 = new Panel { BackColor = SystemColors.ButtonHighlight, Location = new Point(42, 290), Size = new Size(732, 189) };
+            TableLayoutPanel mainLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                RowCount = 2,
+                ColumnCount = 2,
+                Padding = new Padding(20)
+            };
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
 
-            this.Controls.Add(panel1);
-            this.Controls.Add(panel2);
-            this.Controls.Add(panel3);
+            panel1 = new Panel { BackColor = SystemColors.ButtonHighlight, Dock = DockStyle.Fill, Margin = new Padding(10) };
+            panel2 = new Panel { BackColor = SystemColors.ButtonHighlight, Dock = DockStyle.Fill, Margin = new Padding(10) };
+            panel3 = new Panel { BackColor = SystemColors.ButtonHighlight, Dock = DockStyle.Fill, Margin = new Padding(10), Padding = new Padding(20, 50, 20, 20) };
+
+            mainLayout.Controls.Add(panel1, 0, 0);
+            mainLayout.Controls.Add(panel2, 1, 0);
+            mainLayout.Controls.Add(panel3, 0, 1);
+            mainLayout.SetColumnSpan(panel3, 2);
+
+            this.Controls.Add(mainLayout);
         }
 
         private void InitializeInventoryManagementUI()
@@ -101,8 +116,7 @@ namespace WareHouseApp
 
             gridInventory = new DataGridView
             {
-                Location = new Point(20, 40),
-                Size = new Size(690, 130),
+                Dock = DockStyle.Fill,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 ReadOnly = true,

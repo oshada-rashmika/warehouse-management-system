@@ -20,8 +20,45 @@ namespace WareHouseApp
         public MainDash()
         {
             InitializeComponent();
+            InitializeLayout();
             InitializeEmployeeManagementUI();
             RefreshData();
+        }
+
+        private void InitializeLayout()
+        {
+            this.Controls.Remove(panel1);
+            this.Controls.Remove(panel2);
+            this.Controls.Remove(panel3);
+
+            TableLayoutPanel mainLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                RowCount = 2,
+                ColumnCount = 2,
+                Padding = new Padding(20)
+            };
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+            panel1.Dock = DockStyle.Fill;
+            panel1.Margin = new Padding(10);
+
+            panel2.Dock = DockStyle.Fill;
+            panel2.Margin = new Padding(10);
+
+            panel3.Dock = DockStyle.Fill;
+            panel3.Margin = new Padding(10);
+            panel3.Padding = new Padding(20, 50, 20, 20);
+
+            mainLayout.Controls.Add(panel1, 0, 0);
+            mainLayout.Controls.Add(panel2, 1, 0);
+            mainLayout.Controls.Add(panel3, 0, 1);
+            mainLayout.SetColumnSpan(panel3, 2);
+
+            this.Controls.Add(mainLayout);
         }
 
         private void InitializeEmployeeManagementUI()
@@ -90,8 +127,7 @@ namespace WareHouseApp
 
             gridEmployees = new DataGridView
             {
-                Location = new Point(20, 40),
-                Size = new Size(690, 130),
+                Dock = DockStyle.Fill,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 ReadOnly = true,

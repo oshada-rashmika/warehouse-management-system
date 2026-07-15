@@ -14,10 +14,21 @@ namespace WareHouseApp
     {
         private CustomerDash customerDash;
         private InventoryDash inventoryDash;
+        private Panel workspacePanel;
 
         public DashBoard()
         {
             InitializeComponent();
+            
+            workspacePanel = new Panel();
+            workspacePanel.Location = mainDash1.Location;
+            workspacePanel.Size = mainDash1.Size;
+            workspacePanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            this.Controls.Add(workspacePanel);
+
+            this.MinimumSize = new Size(1095, 595);
+            this.Controls.Remove(mainDash1);
+
             InitializeModules();
             this.Load += DashBoard_Load;
         }
@@ -25,23 +36,19 @@ namespace WareHouseApp
         private void InitializeModules()
         {
             customerDash = new CustomerDash();
-            customerDash.Location = new Point(277, 79);
-            customerDash.Size = new Size(806, 510);
-            customerDash.Visible = false;
-            this.Controls.Add(customerDash);
-
             inventoryDash = new InventoryDash();
-            inventoryDash.Location = new Point(277, 79);
-            inventoryDash.Size = new Size(806, 510);
-            inventoryDash.Visible = false;
-            this.Controls.Add(inventoryDash);
-            
+
             button1.Text = "Employees";
             button2.Text = "Customers";
             button3.Text = "Inventory";
             button8.Text = "Settings";
-            button7.Text = "Profile";
+            button8.Width = 90;
+            button8.Left = 590;
 
+            button7.Text = "Profile";
+            button7.Width = 115;
+            button7.Left = 690;
+            
             try
             {
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -148,12 +155,18 @@ namespace WareHouseApp
             }
         }
 
-        private void ShowModule(UserControl activeModule)
+        private void ShowModule(Control activeModule)
         {
-            mainDash1.Visible = false;
-            customerDash.Visible = false;
-            inventoryDash.Visible = false;
+            workspacePanel.Controls.Clear();
 
+            if (activeModule is Form childForm)
+            {
+                childForm.TopLevel = false;
+                childForm.FormBorderStyle = FormBorderStyle.None;
+            }
+
+            activeModule.Dock = DockStyle.Fill;
+            workspacePanel.Controls.Add(activeModule);
             activeModule.Visible = true;
             activeModule.BringToFront();
         }
