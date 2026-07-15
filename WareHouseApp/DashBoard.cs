@@ -42,10 +42,28 @@ namespace WareHouseApp
 
             try
             {
-                string imagePath = @"C:\Users\MSI\Downloads\CS107.3 Object Oriented Programming with C#\WareHouseApp - repeat coursework\WareHouseApp - repeat coursework\WareHouseApp\Resources\logout.png";
-                btnLogout.Image = Image.FromFile(imagePath);
-                btnLogout.ImageAlign = ContentAlignment.MiddleLeft;
-                btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string imagePath = System.IO.Path.Combine(baseDir, "Resources", "logout.png");
+
+                // Fallback for development run (e.g. running from bin/Debug or bin/Release)
+                if (!System.IO.File.Exists(imagePath))
+                {
+                    imagePath = System.IO.Path.Combine(baseDir, "..", "..", "Resources", "logout.png");
+                }
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    Image original = Image.FromFile(imagePath);
+                    btnLogout.Image = new Bitmap(original, new Size(24, 24));
+                    btnLogout.ImageAlign = ContentAlignment.MiddleCenter;
+                    btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
+                    btnLogout.ImageAlign = ContentAlignment.MiddleLeft;
+                    btnLogout.Padding = new Padding(60, 0, 0, 0);
+                }
+                else
+                {
+                    Console.WriteLine("[UI Warning] logout.png not found in build directory or project root resources.");
+                }
             }
             catch (Exception ex)
             {
