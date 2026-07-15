@@ -132,7 +132,7 @@ namespace WareHouseApp
         {
             try
             {
-                string query = "SELECT MaterialId, MaterialName, Quantity FROM Material ORDER BY MaterialId DESC";
+                string query = "SELECT Id, Name, Count FROM Material ORDER BY Id DESC";
                 DataTable dt = DatabaseHelper.ExecuteQuery(query);
                 gridInventory.DataSource = dt;
             }
@@ -161,7 +161,7 @@ namespace WareHouseApp
 
             try
             {
-                string insertQuery = "INSERT INTO Material (MaterialName, Quantity) VALUES (@Name, @Qty)";
+                string insertQuery = "INSERT INTO Material (Name, Count) VALUES (@Name, @Qty)";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@Name", name),
@@ -207,7 +207,7 @@ namespace WareHouseApp
 
             try
             {
-                string updateQuery = "UPDATE Material SET Quantity = @Qty WHERE MaterialId = @Id";
+                string updateQuery = "UPDATE Material SET Count = @Qty WHERE Id = @Id";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@Qty", newQty),
