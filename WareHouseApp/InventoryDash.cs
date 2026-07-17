@@ -98,11 +98,11 @@ namespace WareHouseApp
 
             Button btnUpdate = new Button
             {
-                Text = "Update Stock Level",
+                Text = "Update",
                 Location = new Point(130, 135),
-                Size = new Size(180, 35),
+                Size = new Size(85, 35),
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                BackColor = Color.ForestGreen,
+                BackColor = Color.RoyalBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
@@ -110,9 +110,40 @@ namespace WareHouseApp
             btnUpdate.FlatAppearance.BorderSize = 0;
             btnUpdate.Click += BtnUpdate_Click;
             panel2.Controls.Add(btnUpdate);
+
+            Button btnDelete = new Button
+            {
+                Text = "Delete",
+                Location = new Point(225, 135),
+                Size = new Size(85, 35),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.Crimson,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.Click += BtnDelete_Click;
+            panel2.Controls.Add(btnDelete);
             
             Label lblCard3Title = new Label { Text = "Inventory Tracking Database", Font = new Font("Segoe UI", 12f, FontStyle.Bold), Location = new Point(20, 10), AutoSize = true };
             panel3.Controls.Add(lblCard3Title);
+
+            Button btnPrint = new Button
+            {
+                Text = "Print Report",
+                Location = new Point(600, 10),
+                Size = new Size(120, 30),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
+            };
+            btnPrint.FlatAppearance.BorderSize = 0;
+            btnPrint.Click += (s, e) => TablePrinter.PrintDataGridView(gridInventory, "Inventory Tracking Report");
+            this.panel3.Controls.Add(btnPrint);
 
             gridInventory = new DataGridView
             {
@@ -125,6 +156,7 @@ namespace WareHouseApp
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None
             };
+            gridInventory.SelectionChanged += GridInventory_SelectionChanged;
             panel3.Controls.Add(gridInventory);
         }
 
@@ -231,6 +263,66 @@ namespace WareHouseApp
             catch (Exception ex)
             {
                 MessageBox.Show($"A database error occurred while updating stock:\n\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GridInventory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (gridInventory.SelectedRows.Count > 0)
+            {
+                var row = gridInventory.SelectedRows[0];
+                if (row.Cells["Id"].Value != null)
+                {
+                    txtMaterialId.Text = row.Cells["Id"].Value.ToString();
+                    txtNewQuantity.Text = row.Cells["Count"].Value?.ToString();
+                }
+            }
+            else
+            {
+                txtMaterialId.Clear();
+                txtNewQuantity.Clear();
+            }
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            string idText = txtMaterialId.Text.Trim();
+
+            if (!int.TryParse(idText, out int materialId) || materialId <= 0)
+            {
+                MessageBox.Show("Please enter a valid Material ID to delete.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Are you sure you want to delete this stock item?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    string deleteQuery = "DELETE FROM Material WHERE Id = @Id";
+                    SqlParameter[] parameters = new SqlParameter[]
+                    {
+                        new SqlParameter("@Id", materialId)
+                    };
+
+                    int rowsAffected = DatabaseHelper.ExecuteNonQuery(deleteQuery, parameters);
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Stock item deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        txtMaterialId.Clear();
+                        txtNewQuantity.Clear();
+                        RefreshData();
+                    }
+                    else
+                    {
+                        MessageBox.Show($"No material found with ID {materialId}.", "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"A database error occurred while deleting stock:\n\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

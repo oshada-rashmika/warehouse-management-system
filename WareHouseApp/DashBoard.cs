@@ -16,6 +16,7 @@ namespace WareHouseApp
         private InventoryDash inventoryDash;
         private Panel workspacePanel;
         private ContextMenuStrip profileMenu;
+        private bool isDarkMode = false;
 
         public DashBoard()
         {
@@ -32,6 +33,28 @@ namespace WareHouseApp
 
             InitializeModules();
             this.Load += DashBoard_Load;
+        }
+
+        private Bitmap TintImageToWhite(Image sourceImage)
+        {
+            Bitmap bmp = new Bitmap(sourceImage.Width, sourceImage.Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix(
+                    new float[][]
+                    {
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 1, 0},
+                        new float[] {1, 1, 1, 0, 1}
+                    });
+                System.Drawing.Imaging.ImageAttributes attributes = new System.Drawing.Imaging.ImageAttributes();
+                attributes.SetColorMatrix(colorMatrix);
+                g.DrawImage(sourceImage, new Rectangle(0, 0, bmp.Width, bmp.Height),
+                    0, 0, sourceImage.Width, sourceImage.Height, GraphicsUnit.Pixel, attributes);
+            }
+            return bmp;
         }
 
         private void InitializeModules()
@@ -63,11 +86,12 @@ namespace WareHouseApp
                 if (System.IO.File.Exists(imagePath))
                 {
                     Image original = Image.FromFile(imagePath);
-                    btnLogout.Image = new Bitmap(original, new Size(24, 24));
+                    Bitmap tinted = TintImageToWhite(original);
+                    btnLogout.Image = new Bitmap(tinted, new Size(24, 24));
                     btnLogout.ImageAlign = ContentAlignment.MiddleCenter;
+                    btnLogout.TextAlign = ContentAlignment.MiddleCenter;
                     btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
-                    btnLogout.ImageAlign = ContentAlignment.MiddleLeft;
-                    btnLogout.Padding = new Padding(60, 0, 0, 0);
+                    btnLogout.Padding = new Padding(0);
                 }
                 else
                 {
@@ -86,6 +110,51 @@ namespace WareHouseApp
             
             button8.Click += ComingSoon_Click;
             button9.Click += ComingSoon_Click;
+            
+            ApplyModernStyles();
+        }
+
+        private void ApplyModernStyles()
+        {
+            Button[] sidebarButtons = { button1, button2, button3 };
+            int startY = 80;
+            int spacingY = 15;
+            
+            foreach (var btn in sidebarButtons)
+            {
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+                btn.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                btn.ForeColor = Color.White;
+                btn.BackColor = Color.FromArgb(85, 135, 255);
+                btn.Cursor = Cursors.Hand;
+                btn.Width = panel1.Width - 40;
+                btn.Height = 45;
+                btn.Location = new Point(20, startY);
+                startY += btn.Height + spacingY;
+            }
+            
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            btnLogout.ForeColor = Color.White;
+            btnLogout.BackColor = Color.Crimson;
+            btnLogout.Cursor = Cursors.Hand;
+            btnLogout.Width = panel1.Width - 40;
+            btnLogout.Height = 45;
+            btnLogout.Location = new Point(20, panel1.Height - btnLogout.Height - 30);
+            btnLogout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+
+            Button[] topButtons = { button7, button8, button9 };
+            foreach (var btn in topButtons)
+            {
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+                btn.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+                btn.Cursor = Cursors.Hand;
+                btn.BackColor = Color.WhiteSmoke;
+                btn.Height = 42;
+            }
         }
 
         private void ComingSoon_Click(object sender, EventArgs e)
@@ -123,14 +192,18 @@ namespace WareHouseApp
 
         private void AdjustHeaderLayout()
         {
-            int margin = 12;
-            int spacing = 10;
+            int margin = 20;
+            int spacing = 15;
 
-            button7.Width = 115;
+            button7.Width = 110;
+            button7.Top = (panel2.Height - button7.Height) / 2;
             button7.Left = panel2.Width - button7.Width - margin;
-
             button8.Width = 90;
+            button8.Top = (panel2.Height - button8.Height) / 2;
             button8.Left = button7.Left - button8.Width - spacing;
+            button9.Width = 100;
+            button9.Top = (panel2.Height - button9.Height) / 2;
+            button9.Left = margin;
         }
 
         private void LoadProfileIcon()
@@ -183,7 +256,135 @@ namespace WareHouseApp
             logoutItem.Click += BtnLogout_Click;
             profileMenu.Items.Add(logoutItem);
             
+            profileMenu.Items.Add(new ToolStripSeparator());
+            ToolStripMenuItem darkModeItem = new ToolStripMenuItem("Toggle Dark/Light Mode");
+            darkModeItem.Click += ToggleDarkMode_Click;
+            profileMenu.Items.Add(darkModeItem);
+            
             button7.Click += Button7_Click;
+        }
+
+        private void ToggleDarkMode_Click(object sender, EventArgs e)
+        {
+            isDarkMode = !isDarkMode;
+            ApplyTheme();
+        }
+
+        private void ApplyTheme()
+        {
+            Color darkBg = Color.FromArgb(45, 45, 48);
+            Color darkPanel = Color.FromArgb(30, 30, 30);
+            Color darkText = Color.White;
+
+            Color lightBg = SystemColors.Control;
+            Color lightPanel1 = Color.RoyalBlue;
+            Color lightPanel2 = Color.Silver;
+            Color lightText = SystemColors.ControlText;
+
+            this.BackColor = isDarkMode ? darkBg : lightBg;
+            this.ForeColor = isDarkMode ? darkText : lightText;
+            
+            panel1.BackColor = isDarkMode ? darkPanel : lightPanel1;
+            panel2.BackColor = isDarkMode ? Color.FromArgb(20, 20, 20) : lightPanel2;
+
+            ApplyThemeRecursive(this, isDarkMode, darkBg, darkPanel, darkText, lightBg, lightText);
+            
+            foreach (Control c in panel1.Controls)
+            {
+                if (c is Button btn)
+                {
+                    if (btn == btnLogout)
+                    {
+                        btn.BackColor = Color.Crimson;
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.FromArgb(85, 135, 255);
+                        btn.ForeColor = isDarkMode ? darkText : Color.White;
+                    }
+                }
+            }
+            foreach (Control c in panel2.Controls)
+            {
+                if (c is Button btn)
+                {
+                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : Color.WhiteSmoke;
+                    btn.ForeColor = isDarkMode ? darkText : SystemColors.ControlText;
+                }
+            }
+        }
+
+        private void ApplyThemeRecursive(Control parent, bool isDark, Color darkBg, Color darkPanel, Color darkText, Color lightBg, Color lightText)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                if (c == panel1 || c == panel2) continue;
+                
+                if (c is Form || c is UserControl || c is TableLayoutPanel)
+                {
+                    c.BackColor = isDark ? darkBg : lightBg;
+                    c.ForeColor = isDark ? darkText : lightText;
+                }
+                else if (c is Panel)
+                {
+                    if (c == workspacePanel)
+                    {
+                        c.BackColor = isDark ? darkBg : lightBg;
+                    }
+                    else
+                    {
+                        c.BackColor = isDark ? Color.FromArgb(60, 60, 60) : Color.White;
+                    }
+                    c.ForeColor = isDark ? darkText : lightText;
+                }
+                else if (c is Button btn)
+                {
+                    if (btn.Text == "Delete")
+                    {
+                        btn.BackColor = Color.Crimson;
+                        btn.ForeColor = Color.White;
+                    }
+                    else if (btn.Text == "Update" || btn.Text == "Add" || btn.Text == "Log Stock" || btn.Text == "Print Report")
+                    {
+                        btn.BackColor = Color.RoyalBlue;
+                        btn.ForeColor = Color.White;
+                    }
+                    else if (btn.BackColor != Color.RoyalBlue)
+                    {
+                        btn.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
+                        btn.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    }
+                }
+                else if (c is TextBox || c is ComboBox)
+                {
+                    c.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Window;
+                    c.ForeColor = isDark ? darkText : SystemColors.WindowText;
+                }
+                else if (c is DataGridView dgv)
+                {
+                    dgv.BackgroundColor = isDark ? darkPanel : Color.White;
+                    dgv.DefaultCellStyle.BackColor = isDark ? darkBg : Color.White;
+                    dgv.DefaultCellStyle.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    dgv.ColumnHeadersDefaultCellStyle.BackColor = isDark ? darkPanel : SystemColors.Control;
+                    dgv.ColumnHeadersDefaultCellStyle.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    dgv.EnableHeadersVisualStyles = false;
+                }
+                else if (c is Label lbl)
+                {
+                    if (lbl.ForeColor == Color.RoyalBlue && isDark)
+                        lbl.ForeColor = Color.LightSkyBlue;
+                    else if (lbl.ForeColor == Color.LightSkyBlue && !isDark)
+                        lbl.ForeColor = Color.RoyalBlue;
+                    else
+                        lbl.ForeColor = isDark ? darkText : lightText;
+                }
+                
+                if (c.HasChildren)
+                {
+                    ApplyThemeRecursive(c, isDark, darkBg, darkPanel, darkText, lightBg, lightText);
+                }
+            }
         }
 
         private void Button7_Click(object sender, EventArgs e)
@@ -218,6 +419,11 @@ namespace WareHouseApp
             workspacePanel.Controls.Add(activeModule);
             activeModule.Visible = true;
             activeModule.BringToFront();
+            
+            if (isDarkMode)
+            {
+                ApplyTheme();
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)

@@ -16,6 +16,7 @@ namespace WareHouseApp
         private TextBox txtNewUsername;
         private TextBox txtNewPassword;
         private DataGridView gridEmployees;
+        private int selectedEmpId = -1;
 
         public MainDash()
         {
@@ -84,7 +85,7 @@ namespace WareHouseApp
 
             Label lblCard2Title = new Label
             {
-                Text = "Add New Employee",
+                Text = "Manage Employee",
                 Font = new Font("Segoe UI", 12f, FontStyle.Bold),
                 Location = new Point(20, 10),
                 AutoSize = true
@@ -92,20 +93,20 @@ namespace WareHouseApp
             this.panel2.Controls.Add(lblCard2Title);
 
             Label lblUser = new Label { Text = "Username:", Location = new Point(20, 50), AutoSize = true, Font = new Font("Segoe UI", 9f) };
-            txtNewUsername = new TextBox { Location = new Point(100, 48), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f) };
+            txtNewUsername = new TextBox { Location = new Point(120, 48), Size = new Size(245, 25), Font = new Font("Segoe UI", 10f) };
             this.panel2.Controls.Add(lblUser);
             this.panel2.Controls.Add(txtNewUsername);
 
             Label lblPass = new Label { Text = "Password:", Location = new Point(20, 90), AutoSize = true, Font = new Font("Segoe UI", 9f) };
-            txtNewPassword = new TextBox { Location = new Point(100, 88), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f), PasswordChar = '•' };
+            txtNewPassword = new TextBox { Location = new Point(120, 88), Size = new Size(245, 25), Font = new Font("Segoe UI", 10f), PasswordChar = '•' };
             this.panel2.Controls.Add(lblPass);
             this.panel2.Controls.Add(txtNewPassword);
 
             Button btnAdd = new Button
             {
-                Text = "Add Employee",
-                Location = new Point(100, 130),
-                Size = new Size(180, 35),
+                Text = "Add",
+                Location = new Point(120, 130),
+                Size = new Size(75, 35),
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 BackColor = Color.RoyalBlue,
                 ForeColor = Color.White,
@@ -116,6 +117,36 @@ namespace WareHouseApp
             btnAdd.Click += BtnAdd_Click;
             this.panel2.Controls.Add(btnAdd);
 
+            Button btnUpdate = new Button
+            {
+                Text = "Update",
+                Location = new Point(205, 130),
+                Size = new Size(75, 35),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnUpdate.FlatAppearance.BorderSize = 0;
+            btnUpdate.Click += BtnUpdate_Click;
+            this.panel2.Controls.Add(btnUpdate);
+
+            Button btnDelete = new Button
+            {
+                Text = "Delete",
+                Location = new Point(290, 130),
+                Size = new Size(75, 35),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.Crimson,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.Click += BtnDelete_Click;
+            this.panel2.Controls.Add(btnDelete);
+
             Label lblCard3Title = new Label
             {
                 Text = "Registered Employees Database",
@@ -124,6 +155,22 @@ namespace WareHouseApp
                 AutoSize = true
             };
             this.panel3.Controls.Add(lblCard3Title);
+
+            Button btnPrint = new Button
+            {
+                Text = "Print Report",
+                Location = new Point(600, 10),
+                Size = new Size(120, 30),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
+            };
+            btnPrint.FlatAppearance.BorderSize = 0;
+            btnPrint.Click += (s, e) => TablePrinter.PrintDataGridView(gridEmployees, "Employees Report");
+            this.panel3.Controls.Add(btnPrint);
 
             gridEmployees = new DataGridView
             {
@@ -136,6 +183,7 @@ namespace WareHouseApp
                 BackgroundColor = Color.White,
                 BorderStyle = BorderStyle.None
             };
+            gridEmployees.SelectionChanged += GridEmployees_SelectionChanged;
             this.panel3.Controls.Add(gridEmployees);
         }
 
@@ -191,6 +239,99 @@ namespace WareHouseApp
             catch (Exception ex)
             {
                 MessageBox.Show($"A database error occurred while adding the employee:\n\n{ex.Message}", "System Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GridEmployees_SelectionChanged(object sender, EventArgs e)
+        {
+            if (gridEmployees.SelectedRows.Count > 0)
+            {
+                var row = gridEmployees.SelectedRows[0];
+                if (row.Cells["EmpId"].Value != null)
+                {
+                    selectedEmpId = Convert.ToInt32(row.Cells["EmpId"].Value);
+                    txtNewUsername.Text = row.Cells["Username"].Value.ToString();
+                    txtNewPassword.Clear();
+                }
+            }
+            else
+            {
+                selectedEmpId = -1;
+                txtNewUsername.Clear();
+                txtNewPassword.Clear();
+            }
+        }
+
+        private void BtnUpdate_Click(object sender, EventArgs e)
+        {
+            if (selectedEmpId == -1)
+            {
+                MessageBox.Show("Please select an employee from the table to update.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            string username = txtNewUsername.Text.Trim();
+            string password = txtNewPassword.Text;
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                bool success = DatabaseHelper.UpdateEmployee(selectedEmpId, username, password);
+                if (success)
+                {
+                    MessageBox.Show("Employee updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtNewUsername.Clear();
+                    txtNewPassword.Clear();
+                    selectedEmpId = -1;
+                    RefreshData();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update employee.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Database error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            if (selectedEmpId == -1)
+            {
+                MessageBox.Show("Please select an employee from the table to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    bool success = DatabaseHelper.DeleteEmployee(selectedEmpId);
+                    if (success)
+                    {
+                        MessageBox.Show("Employee deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        txtNewUsername.Clear();
+                        txtNewPassword.Clear();
+                        selectedEmpId = -1;
+                        RefreshData();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to delete employee.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Database error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
