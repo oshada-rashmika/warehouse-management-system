@@ -134,5 +134,40 @@ namespace WareHouseApp
             int rowsAffected = ExecuteNonQuery(query, parameters);
             return rowsAffected > 0;
         }
+
+        public static bool UpdateEmployee(int empId, string username, string plainTextPassword)
+        {
+            if (string.IsNullOrWhiteSpace(plainTextPassword))
+            {
+                string query = "UPDATE Person SET Username = @User WHERE EmpId = @Id";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@User", username),
+                    new SqlParameter("@Id", empId)
+                };
+                return ExecuteNonQuery(query, parameters) > 0;
+            }
+            else
+            {
+                string query = "UPDATE Person SET Username = @User, Password = @Pass WHERE EmpId = @Id";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@User", username),
+                    new SqlParameter("@Pass", plainTextPassword),
+                    new SqlParameter("@Id", empId)
+                };
+                return ExecuteNonQuery(query, parameters) > 0;
+            }
+        }
+
+        public static bool DeleteEmployee(int empId)
+        {
+            string query = "DELETE FROM Person WHERE EmpId = @Id";
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Id", empId)
+            };
+            return ExecuteNonQuery(query, parameters) > 0;
+        }
     }
 }
