@@ -290,9 +290,21 @@ namespace WareHouseApp
             {
                 if (c == panel1 || c == panel2) continue;
                 
-                if (c is Form || c is UserControl || c is Panel || c is TableLayoutPanel)
+                if (c is Form || c is UserControl || c is TableLayoutPanel)
                 {
                     c.BackColor = isDark ? darkBg : lightBg;
+                    c.ForeColor = isDark ? darkText : lightText;
+                }
+                else if (c is Panel)
+                {
+                    if (c == workspacePanel)
+                    {
+                        c.BackColor = isDark ? darkBg : lightBg;
+                    }
+                    else
+                    {
+                        c.BackColor = isDark ? Color.FromArgb(60, 60, 60) : Color.White;
+                    }
                     c.ForeColor = isDark ? darkText : lightText;
                 }
                 else if (c is Button btn)
