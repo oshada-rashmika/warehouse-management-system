@@ -83,6 +83,14 @@ namespace WareHouseApp
             button2.Click += Button2_Click;
             button3.Click += Button3_Click;
             btnLogout.Click += BtnLogout_Click;
+            
+            button8.Click += ComingSoon_Click;
+            button9.Click += ComingSoon_Click;
+        }
+
+        private void ComingSoon_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Coming soon", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnLogout_Click(object sender, EventArgs e)
