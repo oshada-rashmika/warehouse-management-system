@@ -16,6 +16,7 @@ namespace WareHouseApp
         private InventoryDash inventoryDash;
         private Panel workspacePanel;
         private ContextMenuStrip profileMenu;
+        private bool isDarkMode = false;
 
         public DashBoard()
         {
@@ -183,7 +184,105 @@ namespace WareHouseApp
             logoutItem.Click += BtnLogout_Click;
             profileMenu.Items.Add(logoutItem);
             
+            profileMenu.Items.Add(new ToolStripSeparator());
+            ToolStripMenuItem darkModeItem = new ToolStripMenuItem("Toggle Dark/Light Mode");
+            darkModeItem.Click += ToggleDarkMode_Click;
+            profileMenu.Items.Add(darkModeItem);
+            
             button7.Click += Button7_Click;
+        }
+
+        private void ToggleDarkMode_Click(object sender, EventArgs e)
+        {
+            isDarkMode = !isDarkMode;
+            ApplyTheme();
+        }
+
+        private void ApplyTheme()
+        {
+            Color darkBg = Color.FromArgb(45, 45, 48);
+            Color darkPanel = Color.FromArgb(30, 30, 30);
+            Color darkText = Color.White;
+
+            Color lightBg = SystemColors.Control;
+            Color lightPanel1 = Color.RoyalBlue;
+            Color lightPanel2 = Color.Silver;
+            Color lightText = SystemColors.ControlText;
+
+            this.BackColor = isDarkMode ? darkBg : lightBg;
+            this.ForeColor = isDarkMode ? darkText : lightText;
+            
+            panel1.BackColor = isDarkMode ? darkPanel : lightPanel1;
+            panel2.BackColor = isDarkMode ? Color.FromArgb(20, 20, 20) : lightPanel2;
+
+            ApplyThemeRecursive(this, isDarkMode, darkBg, darkPanel, darkText, lightBg, lightText);
+            
+            foreach (Control c in panel1.Controls)
+            {
+                if (c is Button btn)
+                {
+                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
+                    btn.ForeColor = isDarkMode ? darkText : SystemColors.ControlText;
+                }
+            }
+            foreach (Control c in panel2.Controls)
+            {
+                if (c is Button btn)
+                {
+                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
+                    btn.ForeColor = isDarkMode ? darkText : SystemColors.ControlText;
+                }
+            }
+        }
+
+        private void ApplyThemeRecursive(Control parent, bool isDark, Color darkBg, Color darkPanel, Color darkText, Color lightBg, Color lightText)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                if (c == panel1 || c == panel2) continue;
+                
+                if (c is Form || c is UserControl || c is Panel || c is TableLayoutPanel)
+                {
+                    c.BackColor = isDark ? darkBg : lightBg;
+                    c.ForeColor = isDark ? darkText : lightText;
+                }
+                else if (c is Button btn)
+                {
+                    if (btn.BackColor != Color.RoyalBlue)
+                    {
+                        btn.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
+                        btn.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    }
+                }
+                else if (c is TextBox || c is ComboBox)
+                {
+                    c.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Window;
+                    c.ForeColor = isDark ? darkText : SystemColors.WindowText;
+                }
+                else if (c is DataGridView dgv)
+                {
+                    dgv.BackgroundColor = isDark ? darkPanel : Color.White;
+                    dgv.DefaultCellStyle.BackColor = isDark ? darkBg : Color.White;
+                    dgv.DefaultCellStyle.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    dgv.ColumnHeadersDefaultCellStyle.BackColor = isDark ? darkPanel : SystemColors.Control;
+                    dgv.ColumnHeadersDefaultCellStyle.ForeColor = isDark ? darkText : SystemColors.ControlText;
+                    dgv.EnableHeadersVisualStyles = false;
+                }
+                else if (c is Label lbl)
+                {
+                    if (lbl.ForeColor == Color.RoyalBlue && isDark)
+                        lbl.ForeColor = Color.LightSkyBlue;
+                    else if (lbl.ForeColor == Color.LightSkyBlue && !isDark)
+                        lbl.ForeColor = Color.RoyalBlue;
+                    else
+                        lbl.ForeColor = isDark ? darkText : lightText;
+                }
+                
+                if (c.HasChildren)
+                {
+                    ApplyThemeRecursive(c, isDark, darkBg, darkPanel, darkText, lightBg, lightText);
+                }
+            }
         }
 
         private void Button7_Click(object sender, EventArgs e)
@@ -218,6 +317,11 @@ namespace WareHouseApp
             workspacePanel.Controls.Add(activeModule);
             activeModule.Visible = true;
             activeModule.BringToFront();
+            
+            if (isDarkMode)
+            {
+                ApplyTheme();
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)
