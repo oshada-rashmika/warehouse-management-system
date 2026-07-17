@@ -15,6 +15,7 @@ namespace WareHouseApp
         private CustomerDash customerDash;
         private InventoryDash inventoryDash;
         private Panel workspacePanel;
+        private ContextMenuStrip profileMenu;
 
         public DashBoard()
         {
@@ -82,6 +83,14 @@ namespace WareHouseApp
             button2.Click += Button2_Click;
             button3.Click += Button3_Click;
             btnLogout.Click += BtnLogout_Click;
+            
+            button8.Click += ComingSoon_Click;
+            button9.Click += ComingSoon_Click;
+        }
+
+        private void ComingSoon_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Coming soon", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnLogout_Click(object sender, EventArgs e)
@@ -109,6 +118,7 @@ namespace WareHouseApp
             AdjustHeaderLayout();
 
             LoadProfileIcon();
+            InitializeProfileDropdown();
         }
 
         private void AdjustHeaderLayout()
@@ -153,6 +163,32 @@ namespace WareHouseApp
             {
                 Console.WriteLine($"[UI Warning] Failed to load profile icon: {ex.Message}");
             }
+        }
+
+        private void InitializeProfileDropdown()
+        {
+            profileMenu = new ContextMenuStrip();
+            
+            ToolStripMenuItem userItem = new ToolStripMenuItem($"User: {SessionManager.CurrentUser}");
+            userItem.Enabled = false; 
+            
+            ToolStripMenuItem roleItem = new ToolStripMenuItem($"Role: {SessionManager.Role}");
+            roleItem.Enabled = false;
+            
+            profileMenu.Items.Add(userItem);
+            profileMenu.Items.Add(roleItem);
+            profileMenu.Items.Add(new ToolStripSeparator());
+            
+            ToolStripMenuItem logoutItem = new ToolStripMenuItem("Log Out");
+            logoutItem.Click += BtnLogout_Click;
+            profileMenu.Items.Add(logoutItem);
+            
+            button7.Click += Button7_Click;
+        }
+
+        private void Button7_Click(object sender, EventArgs e)
+        {
+            profileMenu.Show(button7, new Point(0, button7.Height));
         }
 
         private void ShowModule(Control activeModule)
