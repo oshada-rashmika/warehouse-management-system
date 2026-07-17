@@ -345,6 +345,11 @@ namespace WareHouseApp
                         btn.BackColor = Color.Crimson;
                         btn.ForeColor = Color.White;
                     }
+                    else if (btn.Text == "Update" || btn.Text == "Add" || btn.Text == "Log Stock")
+                    {
+                        btn.BackColor = Color.RoyalBlue;
+                        btn.ForeColor = Color.White;
+                    }
                     else if (btn.BackColor != Color.RoyalBlue)
                     {
                         btn.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Control;

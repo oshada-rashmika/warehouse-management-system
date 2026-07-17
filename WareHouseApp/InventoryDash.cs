@@ -102,7 +102,7 @@ namespace WareHouseApp
                 Location = new Point(130, 135),
                 Size = new Size(85, 35),
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                BackColor = Color.ForestGreen,
+                BackColor = Color.RoyalBlue,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
