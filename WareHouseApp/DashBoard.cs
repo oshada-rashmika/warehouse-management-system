@@ -35,6 +35,28 @@ namespace WareHouseApp
             this.Load += DashBoard_Load;
         }
 
+        private Bitmap TintImageToWhite(Image sourceImage)
+        {
+            Bitmap bmp = new Bitmap(sourceImage.Width, sourceImage.Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                System.Drawing.Imaging.ColorMatrix colorMatrix = new System.Drawing.Imaging.ColorMatrix(
+                    new float[][]
+                    {
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 0, 0},
+                        new float[] {0, 0, 0, 1, 0},
+                        new float[] {1, 1, 1, 0, 1}
+                    });
+                System.Drawing.Imaging.ImageAttributes attributes = new System.Drawing.Imaging.ImageAttributes();
+                attributes.SetColorMatrix(colorMatrix);
+                g.DrawImage(sourceImage, new Rectangle(0, 0, bmp.Width, bmp.Height),
+                    0, 0, sourceImage.Width, sourceImage.Height, GraphicsUnit.Pixel, attributes);
+            }
+            return bmp;
+        }
+
         private void InitializeModules()
         {
             customerDash = new CustomerDash();
@@ -64,11 +86,12 @@ namespace WareHouseApp
                 if (System.IO.File.Exists(imagePath))
                 {
                     Image original = Image.FromFile(imagePath);
-                    btnLogout.Image = new Bitmap(original, new Size(24, 24));
+                    Bitmap tinted = TintImageToWhite(original);
+                    btnLogout.Image = new Bitmap(tinted, new Size(24, 24));
                     btnLogout.ImageAlign = ContentAlignment.MiddleCenter;
+                    btnLogout.TextAlign = ContentAlignment.MiddleCenter;
                     btnLogout.TextImageRelation = TextImageRelation.ImageBeforeText;
-                    btnLogout.ImageAlign = ContentAlignment.MiddleLeft;
-                    btnLogout.Padding = new Padding(60, 0, 0, 0);
+                    btnLogout.Padding = new Padding(0);
                 }
                 else
                 {
@@ -115,7 +138,7 @@ namespace WareHouseApp
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
             btnLogout.ForeColor = Color.White;
-            btnLogout.BackColor = Color.FromArgb(85, 135, 255);
+            btnLogout.BackColor = Color.Crimson;
             btnLogout.Cursor = Cursors.Hand;
             btnLogout.Width = panel1.Width - 40;
             btnLogout.Height = 45;
@@ -270,8 +293,16 @@ namespace WareHouseApp
             {
                 if (c is Button btn)
                 {
-                    btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.FromArgb(85, 135, 255);
-                    btn.ForeColor = isDarkMode ? darkText : Color.White;
+                    if (btn == btnLogout)
+                    {
+                        btn.BackColor = Color.Crimson;
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.FromArgb(85, 135, 255);
+                        btn.ForeColor = isDarkMode ? darkText : Color.White;
+                    }
                 }
             }
             foreach (Control c in panel2.Controls)
