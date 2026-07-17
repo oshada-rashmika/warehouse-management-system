@@ -87,6 +87,53 @@ namespace WareHouseApp
             
             button8.Click += ComingSoon_Click;
             button9.Click += ComingSoon_Click;
+            
+            ApplyModernStyles();
+        }
+
+        private void ApplyModernStyles()
+        {
+            // Side bar layout and styling
+            Button[] sidebarButtons = { button1, button2, button3 };
+            int startY = 80;
+            int spacingY = 15;
+            
+            foreach (var btn in sidebarButtons)
+            {
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+                btn.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                btn.ForeColor = Color.White;
+                btn.BackColor = Color.Transparent;
+                btn.Cursor = Cursors.Hand;
+                btn.Width = panel1.Width - 40;
+                btn.Height = 45;
+                btn.Location = new Point(20, startY);
+                startY += btn.Height + spacingY;
+            }
+            
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            btnLogout.ForeColor = Color.White;
+            btnLogout.BackColor = Color.Transparent;
+            btnLogout.Cursor = Cursors.Hand;
+            btnLogout.Width = panel1.Width - 40;
+            btnLogout.Height = 45;
+            btnLogout.Location = new Point(20, panel1.Height - btnLogout.Height - 30);
+            btnLogout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+
+            // Top bar layout and styling
+            Button[] topButtons = { button7, button8, button9 };
+            foreach (var btn in topButtons)
+            {
+                btn.FlatStyle = FlatStyle.Flat;
+                btn.FlatAppearance.BorderSize = 0;
+                btn.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+                btn.Cursor = Cursors.Hand;
+                btn.BackColor = Color.WhiteSmoke;
+                btn.Height = 42;
+            }
         }
 
         private void ComingSoon_Click(object sender, EventArgs e)
@@ -124,14 +171,23 @@ namespace WareHouseApp
 
         private void AdjustHeaderLayout()
         {
-            int margin = 12;
-            int spacing = 10;
+            int margin = 20;
+            int spacing = 15;
 
-            button7.Width = 115;
+            // Profile
+            button7.Width = 110;
+            button7.Top = (panel2.Height - button7.Height) / 2;
             button7.Left = panel2.Width - button7.Width - margin;
 
+            // Settings
             button8.Width = 90;
+            button8.Top = (panel2.Height - button8.Height) / 2;
             button8.Left = button7.Left - button8.Width - spacing;
+            
+            // Language
+            button9.Width = 100;
+            button9.Top = (panel2.Height - button9.Height) / 2;
+            button9.Left = margin;
         }
 
         private void LoadProfileIcon()
@@ -221,15 +277,15 @@ namespace WareHouseApp
             {
                 if (c is Button btn)
                 {
-                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
-                    btn.ForeColor = isDarkMode ? darkText : SystemColors.ControlText;
+                    btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.Transparent;
+                    btn.ForeColor = isDarkMode ? darkText : Color.White;
                 }
             }
             foreach (Control c in panel2.Controls)
             {
                 if (c is Button btn)
                 {
-                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
+                    btn.BackColor = isDarkMode ? Color.FromArgb(60, 60, 60) : Color.WhiteSmoke;
                     btn.ForeColor = isDarkMode ? darkText : SystemColors.ControlText;
                 }
             }
