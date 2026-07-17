@@ -156,6 +156,22 @@ namespace WareHouseApp
             };
             this.panel3.Controls.Add(lblCard3Title);
 
+            Button btnPrint = new Button
+            {
+                Text = "Print Report",
+                Location = new Point(600, 10),
+                Size = new Size(120, 30),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                BackColor = Color.RoyalBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
+            };
+            btnPrint.FlatAppearance.BorderSize = 0;
+            btnPrint.Click += (s, e) => TablePrinter.PrintDataGridView(gridEmployees, "Employees Report");
+            this.panel3.Controls.Add(btnPrint);
+
             gridEmployees = new DataGridView
             {
                 Dock = DockStyle.Fill,
