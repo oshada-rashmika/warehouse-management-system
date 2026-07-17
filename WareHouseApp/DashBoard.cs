@@ -340,7 +340,12 @@ namespace WareHouseApp
                 }
                 else if (c is Button btn)
                 {
-                    if (btn.BackColor != Color.RoyalBlue)
+                    if (btn.Text == "Delete")
+                    {
+                        btn.BackColor = Color.Crimson;
+                        btn.ForeColor = Color.White;
+                    }
+                    else if (btn.BackColor != Color.RoyalBlue)
                     {
                         btn.BackColor = isDark ? Color.FromArgb(60, 60, 60) : SystemColors.Control;
                         btn.ForeColor = isDark ? darkText : SystemColors.ControlText;
