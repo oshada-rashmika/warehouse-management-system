@@ -93,7 +93,6 @@ namespace WareHouseApp
 
         private void ApplyModernStyles()
         {
-            // Side bar layout and styling
             Button[] sidebarButtons = { button1, button2, button3 };
             int startY = 80;
             int spacingY = 15;
@@ -104,7 +103,7 @@ namespace WareHouseApp
                 btn.FlatAppearance.BorderSize = 0;
                 btn.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
                 btn.ForeColor = Color.White;
-                btn.BackColor = Color.Transparent;
+                btn.BackColor = Color.FromArgb(85, 135, 255);
                 btn.Cursor = Cursors.Hand;
                 btn.Width = panel1.Width - 40;
                 btn.Height = 45;
@@ -116,14 +115,13 @@ namespace WareHouseApp
             btnLogout.FlatAppearance.BorderSize = 0;
             btnLogout.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
             btnLogout.ForeColor = Color.White;
-            btnLogout.BackColor = Color.Transparent;
+            btnLogout.BackColor = Color.FromArgb(85, 135, 255);
             btnLogout.Cursor = Cursors.Hand;
             btnLogout.Width = panel1.Width - 40;
             btnLogout.Height = 45;
             btnLogout.Location = new Point(20, panel1.Height - btnLogout.Height - 30);
             btnLogout.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 
-            // Top bar layout and styling
             Button[] topButtons = { button7, button8, button9 };
             foreach (var btn in topButtons)
             {
@@ -174,17 +172,12 @@ namespace WareHouseApp
             int margin = 20;
             int spacing = 15;
 
-            // Profile
             button7.Width = 110;
             button7.Top = (panel2.Height - button7.Height) / 2;
             button7.Left = panel2.Width - button7.Width - margin;
-
-            // Settings
             button8.Width = 90;
             button8.Top = (panel2.Height - button8.Height) / 2;
             button8.Left = button7.Left - button8.Width - spacing;
-            
-            // Language
             button9.Width = 100;
             button9.Top = (panel2.Height - button9.Height) / 2;
             button9.Left = margin;
@@ -277,7 +270,7 @@ namespace WareHouseApp
             {
                 if (c is Button btn)
                 {
-                    btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.Transparent;
+                    btn.BackColor = isDarkMode ? Color.FromArgb(45, 45, 48) : Color.FromArgb(85, 135, 255);
                     btn.ForeColor = isDarkMode ? darkText : Color.White;
                 }
             }

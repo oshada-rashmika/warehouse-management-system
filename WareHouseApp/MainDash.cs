@@ -92,19 +92,19 @@ namespace WareHouseApp
             this.panel2.Controls.Add(lblCard2Title);
 
             Label lblUser = new Label { Text = "Username:", Location = new Point(20, 50), AutoSize = true, Font = new Font("Segoe UI", 9f) };
-            txtNewUsername = new TextBox { Location = new Point(100, 48), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f) };
+            txtNewUsername = new TextBox { Location = new Point(120, 48), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f) };
             this.panel2.Controls.Add(lblUser);
             this.panel2.Controls.Add(txtNewUsername);
 
             Label lblPass = new Label { Text = "Password:", Location = new Point(20, 90), AutoSize = true, Font = new Font("Segoe UI", 9f) };
-            txtNewPassword = new TextBox { Location = new Point(100, 88), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f), PasswordChar = '•' };
+            txtNewPassword = new TextBox { Location = new Point(120, 88), Size = new Size(180, 25), Font = new Font("Segoe UI", 10f), PasswordChar = '•' };
             this.panel2.Controls.Add(lblPass);
             this.panel2.Controls.Add(txtNewPassword);
 
             Button btnAdd = new Button
             {
                 Text = "Add Employee",
-                Location = new Point(100, 130),
+                Location = new Point(120, 130),
                 Size = new Size(180, 35),
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 BackColor = Color.RoyalBlue,
